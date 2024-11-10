@@ -28,7 +28,7 @@ public class RecipeDetails extends AppCompatActivity implements View.OnClickList
             startActivity(i);
         }
         if (v.getId() == R.id.addToList) {
-            Intent i = new Intent(this, Search.class);
+            Intent i = new Intent(this, EditRecipe.class);
             startActivity(i);
         }
     }
