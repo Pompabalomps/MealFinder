@@ -10,7 +10,7 @@ public class ImageUpload extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_image_upload);
+        setContentView(R.layout.image_upload);
     }
 
     /** A safe way to get an instance of the Camera object. */
