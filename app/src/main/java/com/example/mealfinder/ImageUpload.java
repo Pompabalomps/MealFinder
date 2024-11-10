@@ -7,7 +7,6 @@ import android.os.Bundle;
 import android.view.View;
 import android.widget.ImageButton;
 
-
 public class ImageUpload extends AppCompatActivity implements View.OnClickListener {
     private ImageButton imageBackBtn;
 
@@ -18,7 +17,6 @@ public class ImageUpload extends AppCompatActivity implements View.OnClickListen
         imageBackBtn = findViewById(R.id.imageBackBtn);
         imageBackBtn.setOnClickListener(this);
     }
-
 
     @Override
     public void onClick(View v) {
