@@ -6,10 +6,12 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
+import android.widget.ImageButton;
 
 public class RecipeDetails extends AppCompatActivity implements View.OnClickListener {
     private Button follow;
     private Button addToList;
+    private ImageButton recipeDetailsBackBtn;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -17,8 +19,10 @@ public class RecipeDetails extends AppCompatActivity implements View.OnClickList
         setContentView(R.layout.recipe_details);
         follow = findViewById(R.id.follow);
         addToList = findViewById(R.id.addToList);
+        recipeDetailsBackBtn = findViewById(R.id.recipeDetailsBackBtn);
         follow.setOnClickListener(this);
         addToList.setOnClickListener(this);
+        recipeDetailsBackBtn.setOnClickListener(this);
     }
 
     @Override
@@ -29,6 +33,10 @@ public class RecipeDetails extends AppCompatActivity implements View.OnClickList
         }
         if (v.getId() == R.id.addToList) {
             Intent i = new Intent(this, EditRecipe.class);
+            startActivity(i);
+        }
+        if (v.getId() == R.id.recipeDetailsBackBtn) {
+            Intent i = new Intent(this, Main.class);
             startActivity(i);
         }
     }

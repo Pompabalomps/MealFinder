@@ -21,6 +21,7 @@ public class Main extends AppCompatActivity implements View.OnClickListener {
     private ImageButton ibMainProfile;
     private ImageButton ibMainImage;
     private FirebaseAuth mAuth;
+    private Button mainFyBtn;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -30,9 +31,11 @@ public class Main extends AppCompatActivity implements View.OnClickListener {
         ibMainSearch = findViewById(R.id.ibMainSearch);
         ibMainProfile = findViewById(R.id.ibMainProfile);
         ibMainImage = findViewById(R.id.ibMainImage);
+        mainFyBtn = findViewById(R.id.mainFyBtn);
         ibMainSearch.setOnClickListener(this);
         ibMainProfile.setOnClickListener(this);
         ibMainImage.setOnClickListener(this);
+        mainFyBtn.setOnClickListener(this);
     }
 
     @Override
@@ -49,6 +52,11 @@ public class Main extends AppCompatActivity implements View.OnClickListener {
 
         if (v.getId() == R.id.ibMainImage) {
             Intent i = new Intent(this, ImageUpload.class);
+            startActivity(i);
+        }
+
+        if (v.getId() == R.id.mainFyBtn) {
+            Intent i = new Intent(this, ForYou.class);
             startActivity(i);
         }
     }
