@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "804295794196",
+    "project_id": "mealfinder-c6253",
+    "storage_bucket": "mealfinder-c6253.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:804295794196:android:359f0a0e47250a43dad101",
+        "android_client_info": {
+          "package_name": "com.example.mealfinder"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDctS5dQhV_KU01cOTRhfYwCbxI1qp8s60"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

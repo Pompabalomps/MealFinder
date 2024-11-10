@@ -1,0 +1,96 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.appcompat.widget.LinearLayoutCompat xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".RecipeDetails"
+    android:orientation="vertical"
+    android:background="@drawable/bg">
+
+    <ImageButton
+        android:id="@+id/recipeDetailsBackBtn"
+        android:layout_width="60dp"
+        android:layout_height="60dp"
+        android:src="@drawable/backarrow"
+        android:backgroundTint="@color/milk"
+        android:layout_marginTop="10dp"
+        android:layout_marginLeft="10dp"
+        />
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:fontFamily="@font/kollektif_bolditalic"
+        android:textColor="@color/black"
+        android:textSize="50dp"
+        android:text="abc"
+        android:layout_gravity="center"
+        />
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:fontFamily="@font/kollektif_bolditalic"
+        android:text="xyz"
+        android:textColor="@color/black"
+        android:textSize="20dp"
+        android:layout_gravity="center"
+        android:layout_marginRight="40dp"
+        />
+
+    <Button
+        android:id="@+id/follow"
+        android:layout_width="wrap_content"
+        android:layout_height="35dp"
+        android:text="follow"
+        android:textSize="10sp"
+        android:layout_gravity="center"
+        android:layout_marginTop="-27dp"
+        android:layout_marginLeft="30dp"
+        />
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="16"
+        android:textSize="20dp"
+        android:textAlignment="center"
+        android:textColor="@color/black"
+        android:fontFamily="@font/kollektif_bolditalic"
+        android:layout_gravity="center"
+        android:layout_marginTop="100dp"
+        android:layout_marginBottom="-57dp"
+        android:translationZ="90dp"
+        />
+
+    <ImageView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:src="@drawable/heart"
+        android:layout_marginTop="0dp"
+        android:layout_gravity="center"
+        />
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="100dp"
+        android:background="@drawable/button_gradient">
+        <Button
+            android:id="@+id/addToList"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:singleLine="true"
+            android:text="Add to my list!"
+            android:textSize="40dp"
+            android:textAlignment="center"
+            android:textColor="@color/black"
+            android:fontFamily="@font/kollektif_bolditalic"
+            android:layout_gravity="center"
+            android:background="@android:color/transparent"
+            />
+    </LinearLayout>
+
+
+
+</androidx.appcompat.widget.LinearLayoutCompat>

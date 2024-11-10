@@ -1,0 +1,4 @@
+<resources>
+    <string name="app_name">MealFinder</string>
+    <string name="password_hint">Password</string>
+</resources>
