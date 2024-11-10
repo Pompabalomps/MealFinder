@@ -2,26 +2,27 @@ package com.example.mealfinder;
 
 import androidx.appcompat.app.AppCompatActivity;
 
-import android.hardware.Camera;
+import android.content.Intent;
 import android.os.Bundle;
+import android.view.View;
+import android.widget.ImageButton;
 
-public class ImageUpload extends AppCompatActivity {
+public class ImageUpload extends AppCompatActivity implements View.OnClickListener {
+    private ImageButton imageBackBtn;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.image_upload);
+        imageBackBtn = findViewById(R.id.imageBackBtn);
+        imageBackBtn.setOnClickListener(this);
     }
 
-    /** A safe way to get an instance of the Camera object. */
-    public static Camera getCameraInstance(){
-        Camera c = null;
-        try {
-            c = Camera.open(); // attempt to get a Camera instance
+    @Override
+    public void onClick(View v) {
+        if (v.getId() == R.id.imageBackBtn) {
+            Intent i = new Intent(this, Main.class);
+            startActivity(i);
         }
-        catch (Exception e){
-            // Camera is not available (in use or does not exist)
-        }
-        return c; // returns null if camera is unavailable
     }
 }
