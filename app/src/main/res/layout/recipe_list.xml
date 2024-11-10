@@ -10,4 +10,41 @@
     android:background="@drawable/bg"
     >
 
+    <ImageButton
+        android:id="@+id/listBackBtn"
+        android:layout_width="60dp"
+        android:layout_height="60dp"
+        android:src="@drawable/backarrow"
+        android:backgroundTint="@color/milk"
+        android:layout_marginTop="10dp"
+        android:layout_marginLeft="10dp"
+        android:layout_marginBottom="-60dp"
+        />
+
+    <TextView
+        android:id="@+id/tvListTitle"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:text="List"
+        android:textColor="@color/black"
+        android:fontFamily="@font/kollektif_bolditalic"
+        android:textSize="40sp"
+        android:layout_marginTop="100dp"
+        />
+
+    <Button
+        android:id="@+id/recipe_item1Btn"
+        android:layout_width="300dp"
+        android:layout_height="120dp"
+        android:layout_marginTop="10dp"
+        android:layout_gravity="center"
+        android:text="Chili Con Carne\n\n8⭐"
+        android:textColor="@color/black"
+        android:fontFamily="@font/kollektif_bolditalic"
+        android:textSize="20sp"
+        android:backgroundTint="@color/yellow"
+        />
+
+
 </androidx.appcompat.widget.LinearLayoutCompat>
