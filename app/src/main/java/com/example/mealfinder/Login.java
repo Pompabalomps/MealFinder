@@ -14,6 +14,11 @@ import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
 
 public class Login extends AppCompatActivity implements View.OnClickListener {
 
@@ -24,12 +29,14 @@ public class Login extends AppCompatActivity implements View.OnClickListener {
     private EditText etLoginEmail;
     private EditText etLoginPassword;
     private TextView tvLoginFail;
+    private FirebaseDatabase db;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.login);
         mAuth = FirebaseAuth.getInstance();
+        db = FirebaseDatabase.getInstance();
         etLoginEmail = findViewById(R.id.etLoginEmail);
         etLoginPassword = findViewById(R.id.etLoginPassword);
         loginBtn = findViewById(R.id.loginBtn);
@@ -45,7 +52,7 @@ public class Login extends AppCompatActivity implements View.OnClickListener {
         FirebaseUser currentUser = mAuth.getCurrentUser();
         if (currentUser!= null)
         {
-            reload();
+            reload(currentUser);
         }
     }
 
@@ -96,5 +103,7 @@ public class Login extends AppCompatActivity implements View.OnClickListener {
         }
     }
 
-    private void reload() { }
+    private void reload(FirebaseUser user) {
+        mAuth.signOut();
+    }
 }
