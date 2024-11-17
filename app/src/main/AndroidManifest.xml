@@ -23,34 +23,34 @@
         android:theme="@style/Theme.MealFinder"
         tools:targetApi="31">
         <activity
-            android:name=".ForYou"
+            android:name=".activities.ForYou"
             android:exported="false" />
         <activity
-            android:name=".RecipeList"
+            android:name=".activities.RecipeList"
             android:exported="false" />
         <activity
-            android:name=".EditRecipe"
+            android:name=".activities.EditRecipe"
             android:exported="false" />
         <activity
-            android:name=".ImageUpload"
+            android:name=".activities.ImageUpload"
             android:exported="false" />
         <activity
-            android:name=".RecipeDetails"
+            android:name=".activities.RecipeDetails"
             android:exported="false" />
         <activity
-            android:name=".Profile"
+            android:name=".activities.Profile"
             android:exported="false" />
         <activity
-            android:name=".Search"
+            android:name=".activities.Search"
             android:exported="false" />
         <activity
-            android:name=".Main"
+            android:name=".activities.Main"
             android:exported="false" />
         <activity
-            android:name=".Signup"
+            android:name=".activities.Signup"
             android:exported="false" />
         <activity
-            android:name=".Login"
+            android:name=".activities.Login"
             android:exported="true">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />

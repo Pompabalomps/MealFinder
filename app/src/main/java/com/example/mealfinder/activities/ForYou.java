@@ -1,4 +1,4 @@
-package com.example.mealfinder;
+package com.example.mealfinder.activities;
 
 import android.content.Intent;
 import android.os.Bundle;
@@ -7,6 +7,8 @@ import android.widget.Button;
 import android.widget.ImageButton;
 
 import androidx.appcompat.app.AppCompatActivity;
+
+import com.example.mealfinder.R;
 
 public class ForYou extends AppCompatActivity implements View.OnClickListener {
     private ImageButton fyBackBtn;

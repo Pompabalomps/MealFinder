@@ -1,4 +1,4 @@
-package com.example.mealfinder;
+package com.example.mealfinder.activities;
 
 import android.content.Intent;
 import android.os.Bundle;
@@ -9,25 +9,26 @@ import android.widget.TextView;
 
 import androidx.appcompat.app.AppCompatActivity;
 
+import com.example.mealfinder.R;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 
-public class Profile extends AppCompatActivity implements View.OnClickListener {
+public class RecipeList extends AppCompatActivity implements View.OnClickListener {
     private FirebaseAuth mAuth;
-    private TextView tvProfileEmail;
-    private ImageButton profileBackBtn;
-    private Button logoutProfileBtn;
+    private TextView tvListTitle;
+    private Button recipe_item1Btn;
+    private ImageButton listBackBtn;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.profile);
+        setContentView(R.layout.recipe_list);
         mAuth = FirebaseAuth.getInstance();
-        tvProfileEmail = findViewById(R.id.tvProfileEmail);
-        profileBackBtn = findViewById(R.id.profileBackBtn);
-        logoutProfileBtn = findViewById(R.id.logoutProfileBtn);
-        profileBackBtn.setOnClickListener(this);
-        logoutProfileBtn.setOnClickListener(this);
+        tvListTitle = findViewById(R.id.tvListTitle);
+        recipe_item1Btn = findViewById(R.id.recipe_item1Btn);
+        listBackBtn = findViewById(R.id.listBackBtn);
+        recipe_item1Btn.setOnClickListener(this);
+        listBackBtn.setOnClickListener(this);
     }
 
     @Override
@@ -44,18 +45,18 @@ public class Profile extends AppCompatActivity implements View.OnClickListener {
     }
 
     private void reload(FirebaseUser user) {
-        tvProfileEmail.setText(user.getEmail().toString());
+        tvListTitle.setText(user.getEmail().toString() + "'s list");
     }
 
     @Override
     public void onClick(View v) {
-        if (v.getId() == R.id.profileBackBtn) {
-            Intent i = new Intent(this, Main.class);
+        if (v.getId() == R.id.recipe_item1Btn) {
+            Intent i = new Intent(this, RecipeDetails.class);
             startActivity(i);
         }
 
-        if (v.getId() == R.id.logoutProfileBtn) {
-            Intent i = new Intent(this, Login.class);
+        if (v.getId() == R.id.listBackBtn) {
+            Intent i = new Intent(this, Main.class);
             startActivity(i);
         }
     }

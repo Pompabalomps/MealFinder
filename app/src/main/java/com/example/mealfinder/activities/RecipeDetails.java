@@ -1,4 +1,4 @@
-package com.example.mealfinder;
+package com.example.mealfinder.activities;
 
 import androidx.appcompat.app.AppCompatActivity;
 
@@ -7,6 +7,8 @@ import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
 import android.widget.ImageButton;
+
+import com.example.mealfinder.R;
 
 public class RecipeDetails extends AppCompatActivity implements View.OnClickListener {
     private Button follow;
