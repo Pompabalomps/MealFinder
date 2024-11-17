@@ -51,6 +51,22 @@
         android:padding="5dp" />
 
     <EditText
+        android:id="@+id/etSignupUsername"
+        android:layout_width="200dp"
+        android:layout_height="wrap_content"
+        android:ems="10"
+        android:hint="Username"
+        android:textSize="25dp"
+        android:textColor="@color/black"
+        android:fontFamily="@font/kollektif_bolditalic"
+        android:textColorHint="@color/gray"
+        android:inputType="text"
+        android:background="@drawable/inputborder"
+        android:layout_gravity="center"
+        android:layout_marginBottom="15dp"
+        android:padding="5dp" />
+
+    <EditText
         android:id="@+id/etSignupPassword"
         android:layout_width="200dp"
         android:layout_height="wrap_content"

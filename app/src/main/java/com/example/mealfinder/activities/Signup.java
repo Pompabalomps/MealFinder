@@ -13,11 +13,13 @@ import android.widget.ImageButton;
 import android.widget.TextView;
 
 import com.example.mealfinder.R;
+import com.example.mealfinder.objects.User;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.database.FirebaseDatabase;
 
 public class Signup extends AppCompatActivity implements View.OnClickListener {
     Button signupBtn;
@@ -25,19 +27,23 @@ public class Signup extends AppCompatActivity implements View.OnClickListener {
     private FirebaseAuth mAuth;
     TextView tvFail;
     EditText etSignupEmail;
+    EditText etSignupUsername;
     EditText etSignupPassword;
     EditText etSignupPassword2;
     private final String TAG = "Signup Activity";
+    private FirebaseDatabase db;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.signup);
         mAuth = FirebaseAuth.getInstance();
+        db = FirebaseDatabase.getInstance();
         signupBtn = findViewById(R.id.signupBtn);
         backBtn = findViewById(R.id.signupBackBtn);
         tvFail = findViewById(R.id.tvSignupFail);
         etSignupEmail = findViewById(R.id.etSignupEmail);
+        etSignupUsername = findViewById(R.id.etSignupUsername);
         etSignupPassword = findViewById(R.id.etSignupPassword);
         etSignupPassword2 = findViewById(R.id.etSignupPassword2);
         signupBtn.setOnClickListener(this);
@@ -50,11 +56,15 @@ public class Signup extends AppCompatActivity implements View.OnClickListener {
             String email = etSignupEmail.getText().toString();
             String password = etSignupPassword.getText().toString();
             String password2 = etSignupPassword2.getText().toString();
+            String username = etSignupUsername.getText().toString();
             if (!password.equals(password2)) {
                 tvFail.setText("Password doesn't match");
+            } else if (username.isEmpty()) {
+                tvFail.setText("Username cannot be empty");
             } else {
                 tvFail.setText("");
                 createAccount(email, password);
+
             }
         }
         else if (v.getId() == R.id.signupBackBtn) {
@@ -100,6 +110,9 @@ public class Signup extends AppCompatActivity implements View.OnClickListener {
     private void updateUI(FirebaseUser user) {
         if (user != null) {
             Log.d(TAG, "Sign Up SUCCESS");
+            String username = etSignupUsername.getText().toString();
+            User u = new User(user.getUid(), username, user.getEmail(), null, 0, 0);
+            db.getReference().child("users").child(user.getUid()).setValue(u);
             Intent i = new Intent(this, Login.class);
             startActivity(i);
         } else {
