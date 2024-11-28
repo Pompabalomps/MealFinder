@@ -18,8 +18,12 @@ import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.storage.FirebaseStorage;
+import com.google.firebase.storage.StorageReference;
+import com.google.firebase.storage.UploadTask;
 
 import java.util.Map;
+import java.io.File;
 
 public class Profile extends AppCompatActivity implements View.OnClickListener {
     private FirebaseAuth mAuth;
@@ -27,7 +31,10 @@ public class Profile extends AppCompatActivity implements View.OnClickListener {
     private TextView tvProfileEmail;
     private ImageButton profileBackBtn;
     private Button logoutProfileBtn;
+    private TextView tvProfileImage;
+    private ImageButton ibProfileImage;
     private FirebaseDatabase db;
+    private FirebaseStorage stor;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -35,11 +42,15 @@ public class Profile extends AppCompatActivity implements View.OnClickListener {
         setContentView(R.layout.profile);
         mAuth = FirebaseAuth.getInstance();
         db = FirebaseDatabase.getInstance();
+        stor = FirebaseStorage.getInstance();
         tvProfileEmail = findViewById(R.id.tvProfileEmail);
         profileBackBtn = findViewById(R.id.profileBackBtn);
         logoutProfileBtn = findViewById(R.id.logoutProfileBtn);
+        tvProfileImage = findViewById(R.id.tvProfileImage);
+        ibProfileImage = findViewById(R.id.ibProfileImage);
         profileBackBtn.setOnClickListener(this);
         logoutProfileBtn.setOnClickListener(this);
+        ibProfileImage.setOnClickListener(this);
     }
 
     @Override
@@ -70,6 +81,21 @@ public class Profile extends AppCompatActivity implements View.OnClickListener {
                 }
             }
         });
+        db.getReference().child("users").child(user.getUid()).get().addOnCompleteListener(new OnCompleteListener<DataSnapshot>() {
+            @Override
+            public void onComplete(@NonNull Task<DataSnapshot> task) {
+                if (!task.isSuccessful()) {
+                    Log.e("firebase", "Error getting data", task.getException());
+                }
+                else {
+                    Object[] image = new File[1];
+                    image[0] = ((Map<String, Object>)task.getResult().getValue()).get("image");
+                    if (image == null) {
+
+                    }
+                }
+            }
+        });
     }
 
     @Override
@@ -83,6 +109,10 @@ public class Profile extends AppCompatActivity implements View.OnClickListener {
             mAuth.signOut();
             Intent i = new Intent(this, Login.class);
             startActivity(i);
+        }
+
+        if (v.getId() == R.id.ibProfileImage) {
+            Log.d(TAG, "Pressed Profile Image");
         }
     }
 }

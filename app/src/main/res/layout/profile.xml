@@ -23,7 +23,7 @@
         android:id="@+id/tvProfileEmail"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="abc"
+        android:text=""
         android:textSize="40dp"
         android:textColor="@color/black"
         android:fontFamily="@font/kollektif_bolditalic"
@@ -40,7 +40,7 @@
         android:textColor="@color/black"
         android:fontFamily="@font/kollektif_bolditalic"
         android:layout_gravity="center"
-        android:layout_marginTop="100dp"
+        android:layout_marginTop="50dp"
         android:layout_marginBottom="-57dp"
         android:translationZ="90dp"
         />
@@ -50,6 +50,27 @@
         android:layout_height="wrap_content"
         android:src="@drawable/heart"
         android:layout_marginTop="0dp"
+        android:layout_gravity="center"
+        android:layout_marginBottom="50dp"
+        />
+
+    <TextView
+        android:id="@+id/tvProfileImage"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Add Image to Profile"
+        android:layout_gravity="center"
+
+        android:fontFamily="@font/kollektif_bolditalic"
+        android:textColor="@color/black"
+        />
+
+    <ImageButton
+        android:id="@+id/ibProfileImage"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        app:srcCompat="@drawable/camera"
+
         android:layout_gravity="center"
         />
 

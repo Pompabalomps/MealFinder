@@ -4,6 +4,8 @@ import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.content.Intent;
+import android.media.Image;
+import android.net.Uri;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
@@ -20,6 +22,13 @@ import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.storage.FirebaseStorage;
+import com.google.firebase.storage.StorageReference;
+import com.google.firebase.storage.UploadTask;
+
+
+import java.io.File;
+import java.util.Date;
 
 public class Signup extends AppCompatActivity implements View.OnClickListener {
     Button signupBtn;
@@ -32,6 +41,7 @@ public class Signup extends AppCompatActivity implements View.OnClickListener {
     EditText etSignupPassword2;
     private final String TAG = "Signup Activity";
     private FirebaseDatabase db;
+    private FirebaseStorage stor;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -39,6 +49,7 @@ public class Signup extends AppCompatActivity implements View.OnClickListener {
         setContentView(R.layout.signup);
         mAuth = FirebaseAuth.getInstance();
         db = FirebaseDatabase.getInstance();
+        stor = FirebaseStorage.getInstance();
         signupBtn = findViewById(R.id.signupBtn);
         backBtn = findViewById(R.id.signupBackBtn);
         tvFail = findViewById(R.id.tvSignupFail);
@@ -111,7 +122,14 @@ public class Signup extends AppCompatActivity implements View.OnClickListener {
         if (user != null) {
             Log.d(TAG, "Sign Up SUCCESS");
             String username = etSignupUsername.getText().toString();
-            User u = new User(user.getUid(), username, user.getEmail(), null, 0, 0);
+            Uri image = Uri.fromFile(new File("/Users/alonzilberman/Downloads/MealFinder/app/src/main/res/drawable/clock.png"));
+            final String[] downloadUrlTask = new String[1];
+            StorageReference imageRef = stor.getReference().child("images/"+ user.getUid());
+            UploadTask uploadTask = imageRef.putFile(image);
+            uploadTask.addOnSuccessListener(taskSnapshot -> {
+                 downloadUrlTask[0] = taskSnapshot.getStorage().getDownloadUrl().toString();
+            });
+            User u = new User(user.getUid(), username, user.getEmail(), downloadUrlTask[0], 0, new Date());
             db.getReference().child("users").child(user.getUid()).setValue(u);
             Intent i = new Intent(this, Login.class);
             startActivity(i);
@@ -121,5 +139,8 @@ public class Signup extends AppCompatActivity implements View.OnClickListener {
         }
     }
 
-    private void reload() { }
+    private void reload() {
+        Intent i = new Intent(this, Main.class);
+        startActivity(i);
+    }
 }

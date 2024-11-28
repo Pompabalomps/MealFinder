@@ -1,16 +1,20 @@
 package com.example.mealfinder.objects;
 
+import android.net.Uri;
+
 import java.io.File;
+import java.util.Date;
 
 public class User {
     private String id;
     private String username;
     private String email;
-    private File image;
+    private String image;
     private int followNum;
-    private int lastLogin;
+    private Date lastLogin;
 
-    public File getImage() {
+
+    public String getImage() {
         return image;
     }
 
@@ -30,7 +34,7 @@ public class User {
         return followNum;
     }
 
-    public int getLastLogin() {
+    public Date getLastLogin() {
         return lastLogin;
     }
 
@@ -40,9 +44,9 @@ public class User {
         this.email = null;
         this.image = null;
         this.followNum = 0;
-        this.lastLogin = 0;
+        this.lastLogin = new Date(0);
     }
-    public User(String id, String username, String email, File image, int followNum, int lastLogin) {
+    public User(String id, String username, String email, String image, int followNum, Date lastLogin) {
         this.id = id;
         this.username = username;
         this.email = email;
