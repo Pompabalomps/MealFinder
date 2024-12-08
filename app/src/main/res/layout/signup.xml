@@ -120,4 +120,22 @@
         android:textColor="@color/red"
         android:fontFamily="@font/kollektif_bolditalic"
         android:textSize="20dp" />
+
+    <ImageButton
+        android:id="@+id/takePhotoBtn"
+        android:layout_width="100dp"
+        android:layout_height="100dp"
+        android:layout_gravity="center"
+        android:layout_marginTop="-30dp"
+        android:src="@drawable/camera"
+        />
+
+<!--    <ImageView-->
+<!--        android:id="@+id/ivPhoto"-->
+<!--        android:layout_width="60dp"-->
+<!--        android:layout_height="60dp"-->
+<!--        android:layout_gravity="center"-->
+<!--        />-->
+
+
 </androidx.appcompat.widget.LinearLayoutCompat>
