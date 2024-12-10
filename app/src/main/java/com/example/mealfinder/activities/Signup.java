@@ -174,6 +174,7 @@ public class Signup extends AppCompatActivity implements View.OnClickListener {
 
         bitmap = BitmapFactory.decodeFile(currentPhotoPath, bmOptions);
         takePhotoIb.setImageBitmap(bitmap);
+        takePhotoIb.setRotation(90);
     }
 
 
