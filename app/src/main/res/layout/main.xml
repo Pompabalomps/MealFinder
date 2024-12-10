@@ -15,7 +15,10 @@
         app:srcCompat="@drawable/search"
 
         android:layout_marginTop="15dp"
-        android:layout_marginLeft="15dp"/>
+        android:layout_marginLeft="15dp"
+        android:layout_gravity="left"
+        />
+
 
     <ImageButton
         android:id="@+id/ibMainProfile"

@@ -16,6 +16,7 @@
         android:backgroundTint="@color/milk"
         android:layout_marginTop="10dp"
         android:layout_marginLeft="10dp"
+        android:layout_gravity="left"
         />
 
     <TextView
