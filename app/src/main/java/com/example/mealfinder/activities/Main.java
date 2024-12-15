@@ -1,6 +1,8 @@
 package com.example.mealfinder.activities;
 
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 
 import android.content.Intent;
 import android.os.Bundle;
@@ -9,7 +11,11 @@ import android.widget.Button;
 import android.widget.ImageButton;
 
 import com.example.mealfinder.R;
+import com.example.mealfinder.adapters.*;
+import com.example.mealfinder.objects.*;
 import com.google.firebase.auth.FirebaseAuth;
+
+import java.util.ArrayList;
 
 public class Main extends AppCompatActivity implements View.OnClickListener {
 
@@ -19,6 +25,7 @@ public class Main extends AppCompatActivity implements View.OnClickListener {
     private ImageButton ibMainImage;
     private FirebaseAuth mAuth;
     private Button mainFyBtn;
+    private RecyclerView rvMain;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -33,6 +40,17 @@ public class Main extends AppCompatActivity implements View.OnClickListener {
         ibMainProfile.setOnClickListener(this);
         ibMainImage.setOnClickListener(this);
         mainFyBtn.setOnClickListener(this);
+
+        ArrayList<Recipe> recipes = new ArrayList<>();
+        recipes.add(new Recipe("Hamburger", "Alon", "1234", "Meat patty between two breads", "cook the meat patty then add between breads", null, null, null, new String[]{"burger", "meat", "tasty"}));
+        recipes.add(new Recipe("Pizza", "Tal", "5678", "flatbread with sauce and cheese", "make the flatbread, spread sauce and cheese then put in the oven", null, null, null, new String[]{"Pizza", "cheese", "sharing"}));
+
+        rvMain = findViewById(R.id.rvMain);
+        RecyclerView.LayoutManager layoutManager = new LinearLayoutManager(this);
+        rvMain.setLayoutManager(layoutManager);
+
+        RecipeAdapter recipeAdapter = new RecipeAdapter(recipes);
+        rvMain.setAdapter(recipeAdapter);
     }
 
     @Override
