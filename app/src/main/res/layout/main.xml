@@ -31,15 +31,6 @@
         android:layout_marginRight="80dp"
         />
 
-    <ImageButton
-        android:id="@+id/ibMainImage"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        app:srcCompat="@drawable/camera"
-
-        android:layout_gravity="center"
-        />
-
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/rvMain"
         android:layout_width="match_parent"

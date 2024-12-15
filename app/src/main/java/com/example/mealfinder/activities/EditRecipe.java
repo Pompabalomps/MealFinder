@@ -38,10 +38,5 @@ public class EditRecipe extends AppCompatActivity implements View.OnClickListene
             Intent i = new Intent(this, RecipeList.class);
             startActivity(i);
         }
-
-        if (v.getId() == R.id.ibEditRImage) {
-            Intent i = new Intent(this, ImageUpload.class);
-            startActivity(i);
-        }
     }
 }

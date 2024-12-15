@@ -26,9 +26,6 @@
             android:name=".activities.EditRecipe"
             android:exported="false" />
         <activity
-            android:name=".activities.ImageUpload"
-            android:exported="false" />
-        <activity
             android:name=".activities.RecipeDetails"
             android:exported="false" />
         <activity
