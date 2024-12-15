@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.appcompat.widget.LinearLayoutCompat xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
@@ -12,51 +12,64 @@
         android:id="@+id/searchBackBtn"
         android:layout_width="60dp"
         android:layout_height="60dp"
-        android:src="@drawable/backarrow"
-        android:backgroundTint="@color/milk"
-        android:layout_marginTop="10dp"
-        android:layout_marginLeft="10dp"
-        android:layout_marginBottom="-60dp"
+        android:layout_alignParentStart="true"
+        android:layout_alignParentTop="true"
         android:layout_gravity="left"
-        />
+        android:layout_marginStart="8dp"
+        android:layout_marginTop="8dp"
+        android:backgroundTint="@color/milk"
+        android:src="@drawable/backarrow"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
 
     <EditText
+        android:id="@+id/editText"
         android:layout_width="250dp"
         android:layout_height="60dp"
+        android:layout_below="@+id/searchBackBtn"
+        android:layout_alignParentStart="true"
+        android:layout_alignParentEnd="true"
         android:layout_gravity="center"
-        android:hint="What Recipe would you like?"
-        android:textSize="19dp"
-        android:ellipsize="start"
-        android:gravity="center"
-        android:textColor="@color/black"
-        android:fontFamily="@font/kollektif_bolditalic"
-        android:textColorHint="@color/gray"
-        android:background="@drawable/searchborder"
 
-        android:layout_marginTop="120dp"/>
+        android:layout_marginStart="80dp"
+        android:layout_marginTop="50dp"
+        android:layout_marginEnd="80dp"
+        android:background="@drawable/searchborder"
+        android:ellipsize="start"
+        android:fontFamily="@font/kollektif_bolditalic"
+        android:gravity="center"
+        android:hint="What Recipe would you like?"
+        android:textColor="@color/black"
+        android:textColorHint="@color/gray"
+        android:textSize="19dp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/searchBackBtn" />
+
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/rvSearch"
+        android:layout_width="match_parent"
+        android:layout_height="250dp"
+        android:layout_below="@+id/editText"
+        android:layout_alignParentStart="true"
+        android:layout_alignParentEnd="true"
+        android:layout_marginStart="85dp"
+        android:layout_marginTop="10dp"
+        android:layout_marginEnd="85dp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/editText" />
 
     <ImageView
+        android:id="@+id/imageView"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:src="@drawable/clock"
-        android:layout_gravity="center"
-        android:layout_marginRight="145dp"
-        android:layout_marginTop="10dp"
-        />
-
-    <Button
-        android:id="@+id/searchRecentBtn1"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="Smoked brisket"
-        android:textColor="@color/black"
-        android:fontFamily="@font/kollektif_bolditalic"
-        android:textSize="20dp"
-        android:layout_gravity="left"
-        android:layout_marginLeft="100dp"
-        android:layout_marginTop="-45dp"
-        android:backgroundTint="@color/milk"
-        android:padding="0dp"/>
+        android:layout_below="@+id/editText"
+        android:layout_alignParentStart="true"
+        android:layout_marginEnd="3dp"
+        app:layout_constraintEnd_toStartOf="@+id/rvSearch"
+        app:layout_constraintTop_toBottomOf="@+id/editText"
+        app:srcCompat="@drawable/clock" />
 
 
-</androidx.appcompat.widget.LinearLayoutCompat>
+</androidx.constraintlayout.widget.ConstraintLayout>

@@ -1,6 +1,8 @@
 package com.example.mealfinder.activities;
 
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 
 import android.content.Intent;
 import android.os.Bundle;
@@ -9,23 +11,37 @@ import android.widget.Button;
 import android.widget.ImageButton;
 
 import com.example.mealfinder.R;
+import com.example.mealfinder.adapters.RecentsAdapter;
+import com.example.mealfinder.adapters.RecipeAdapter;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 
+import java.util.ArrayList;
+
 public class Search extends AppCompatActivity implements View.OnClickListener {
     private FirebaseAuth mAuth;
-    private Button searchRecentButton1;
     private ImageButton searchBackBtn;
+    private RecyclerView rvSearch;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.search);
         mAuth = FirebaseAuth.getInstance();
-        searchRecentButton1 = findViewById(R.id.searchRecentBtn1);
         searchBackBtn = findViewById(R.id.searchBackBtn);
-        searchRecentButton1.setOnClickListener(this);
+        rvSearch = findViewById(R.id.rvSearch);
         searchBackBtn.setOnClickListener(this);
+
+        RecyclerView.LayoutManager layoutManager = new LinearLayoutManager(this);
+        rvSearch.setLayoutManager(layoutManager);
+
+        ArrayList<String> recents = new ArrayList<>();
+        recents.add("Smoked brisket");
+        recents.add("neapolitan pizza");
+        recents.add("Honey lime chicken wings");
+
+        RecentsAdapter recentsAdapter = new RecentsAdapter(recents);
+        rvSearch.setAdapter(recentsAdapter);
     }
 
     @Override
@@ -42,11 +58,6 @@ public class Search extends AppCompatActivity implements View.OnClickListener {
 
     @Override
     public void onClick(View v) {
-        if (v.getId() == R.id.searchRecentBtn1) {
-            Intent i = new Intent(this, RecipeDetails.class);
-            startActivity(i);
-        }
-
         if (v.getId() == R.id.searchBackBtn) {
             Intent i = new Intent(this, Main.class);
             startActivity(i);

@@ -28,11 +28,9 @@ import java.io.File;
 public class Profile extends AppCompatActivity implements View.OnClickListener {
     private FirebaseAuth mAuth;
     private String TAG = "Profile Activity";
-    private TextView tvProfileEmail;
+    private TextView tvProfileHello;
     private ImageButton profileBackBtn;
     private Button logoutProfileBtn;
-    private TextView tvProfileImage;
-    private ImageButton ibProfileImage;
     private FirebaseDatabase db;
     private FirebaseStorage stor;
 
@@ -43,14 +41,11 @@ public class Profile extends AppCompatActivity implements View.OnClickListener {
         mAuth = FirebaseAuth.getInstance();
         db = FirebaseDatabase.getInstance();
         stor = FirebaseStorage.getInstance();
-        tvProfileEmail = findViewById(R.id.tvProfileEmail);
+        tvProfileHello = findViewById(R.id.tvProfileHello);
         profileBackBtn = findViewById(R.id.profileBackBtn);
         logoutProfileBtn = findViewById(R.id.logoutProfileBtn);
-        tvProfileImage = findViewById(R.id.tvProfileImage);
-        ibProfileImage = findViewById(R.id.ibProfileImage);
         profileBackBtn.setOnClickListener(this);
         logoutProfileBtn.setOnClickListener(this);
-        ibProfileImage.setOnClickListener(this);
     }
 
     @Override
@@ -77,7 +72,7 @@ public class Profile extends AppCompatActivity implements View.OnClickListener {
                 else {
                     username[0] = ((Map<String, Object>)task.getResult().getValue()).get("username").toString();
                     Log.d(TAG, "username = " + username[0]);
-                    tvProfileEmail.setText("Hey " + username[0] + "!");
+                    tvProfileHello.setText("Hey " + username[0] + "!");
                 }
             }
         });
@@ -109,10 +104,6 @@ public class Profile extends AppCompatActivity implements View.OnClickListener {
             mAuth.signOut();
             Intent i = new Intent(this, Login.class);
             startActivity(i);
-        }
-
-        if (v.getId() == R.id.ibProfileImage) {
-            Log.d(TAG, "Pressed Profile Image");
         }
     }
 }

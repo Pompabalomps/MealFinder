@@ -13,7 +13,6 @@ import com.example.mealfinder.R;
 public class EditRecipe extends AppCompatActivity implements View.OnClickListener {
     private ImageButton editRBackBtn;
     private Button addListBtn;
-    private ImageButton ibEditRImage;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -21,10 +20,8 @@ public class EditRecipe extends AppCompatActivity implements View.OnClickListene
         setContentView(R.layout.edit_recipe);
         editRBackBtn = findViewById(R.id.editRBackBtn);
         addListBtn = findViewById(R.id.addListBtn);
-        ibEditRImage = findViewById(R.id.ibEditRImage);
         editRBackBtn.setOnClickListener(this);
         addListBtn.setOnClickListener(this);
-        ibEditRImage.setOnClickListener(this);
     }
 
     @Override
