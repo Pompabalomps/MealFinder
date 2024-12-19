@@ -38,8 +38,7 @@ public class RecipeDetails extends AppCompatActivity implements View.OnClickList
             startActivity(i);
         }
         if (v.getId() == R.id.recipeDetailsBackBtn) {
-            Intent i = new Intent(this, Main.class);
-            startActivity(i);
+            finish();
         }
     }
 }

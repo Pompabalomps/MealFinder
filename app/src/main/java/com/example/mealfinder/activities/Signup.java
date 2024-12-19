@@ -91,8 +91,7 @@ public class Signup extends AppCompatActivity implements View.OnClickListener {
                 createAccount(email, password);
             }
         } else if (v.getId() == R.id.signupBackBtn) {
-            Intent i = new Intent(this, Login.class);
-            startActivity(i);
+            finish();
         } else if (v.getId() == R.id.takePhotoBtn) {
             Log.d(TAG, "taking picture");
             dispatchTakePictureIntent();

@@ -96,8 +96,7 @@ public class Profile extends AppCompatActivity implements View.OnClickListener {
     @Override
     public void onClick(View v) {
         if (v.getId() == R.id.profileBackBtn) {
-            Intent i = new Intent(this, Main.class);
-            startActivity(i);
+            finish();
         }
 
         if (v.getId() == R.id.logoutProfileBtn) {

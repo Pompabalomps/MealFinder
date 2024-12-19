@@ -59,8 +59,7 @@ public class Search extends AppCompatActivity implements View.OnClickListener {
     @Override
     public void onClick(View v) {
         if (v.getId() == R.id.searchBackBtn) {
-            Intent i = new Intent(this, Main.class);
-            startActivity(i);
+            finish();
         }
     }
 }

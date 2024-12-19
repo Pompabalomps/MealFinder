@@ -56,8 +56,7 @@ public class RecipeList extends AppCompatActivity implements View.OnClickListene
         }
 
         if (v.getId() == R.id.listBackBtn) {
-            Intent i = new Intent(this, Main.class);
-            startActivity(i);
+            finish();
         }
     }
 }

@@ -27,8 +27,7 @@ public class EditRecipe extends AppCompatActivity implements View.OnClickListene
     @Override
     public void onClick(View v) {
         if (v.getId() == R.id.editRBackBtn) {
-            Intent i = new Intent(this, Main.class);
-            startActivity(i);
+            finish();
         }
 
         if (v.getId() == R.id.addListBtn) {
