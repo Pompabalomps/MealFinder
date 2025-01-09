@@ -7,7 +7,7 @@
     android:background="@color/milk">
 
     <ImageView
-        android:id="@+id/ivRecipe"
+        android:id="@+id/ivProfileRecipe"
         android:layout_width="60dp"
         android:layout_height="60dp"
         android:layout_marginStart="10dp"
@@ -19,39 +19,23 @@
         app:srcCompat="@drawable/heart" />
 
     <TextView
-        android:id="@+id/tvRecipeName"
+        android:id="@+id/tvProfileRecipeName"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_marginStart="6dp"
-        android:layout_marginTop="20dp"
         android:layout_marginEnd="8dp"
         android:fontFamily="@font/kollektif_italic"
         android:gravity="center"
         android:text="RecipeName"
         android:textColor="@color/black"
-        android:textSize="20dp"
-        app:layout_constraintEnd_toStartOf="@+id/ivRecipeLikes"
-        app:layout_constraintStart_toEndOf="@+id/ivRecipe"
+        android:textSize="12dp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toStartOf="@+id/ivProfileRecipeLikes"
+        app:layout_constraintStart_toEndOf="@+id/ivProfileRecipe"
         app:layout_constraintTop_toTopOf="parent" />
 
-    <TextView
-        android:id="@+id/tvRecipeCreator"
-        android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="8dp"
-        android:layout_marginTop="5dp"
-        android:layout_marginEnd="8dp"
-        android:fontFamily="@font/kollektif_italic"
-        android:gravity="center"
-        android:text="RecipeCreator"
-        android:textColor="@color/gray"
-        android:textSize="12dp"
-        app:layout_constraintEnd_toStartOf="@+id/ivRecipeLikes"
-        app:layout_constraintStart_toEndOf="@+id/ivRecipe"
-        app:layout_constraintTop_toBottomOf="@+id/tvRecipeName" />
-
     <ImageView
-        android:id="@+id/ivRecipeLikes"
+        android:id="@+id/ivProfileRecipeLikes"
         android:layout_width="40dp"
         android:layout_height="40dp"
         android:layout_marginTop="20dp"
@@ -61,7 +45,7 @@
         app:srcCompat="@drawable/star" />
 
     <TextView
-        android:id="@+id/tvRecipeLikes"
+        android:id="@+id/tvProfileRecipeLikes"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_marginStart="5dp"
@@ -73,6 +57,6 @@
         android:textColor="@color/black"
         android:textSize="10dp"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toEndOf="@+id/ivRecipeLikes"
+        app:layout_constraintStart_toEndOf="@+id/ivProfileRecipeLikes"
         app:layout_constraintTop_toTopOf="parent" />
 </androidx.constraintlayout.widget.ConstraintLayout>

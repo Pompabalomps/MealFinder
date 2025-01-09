@@ -10,8 +10,13 @@ import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.mealfinder.R;
+import com.example.mealfinder.adapters.ProfileRecipeAdapter;
+import com.example.mealfinder.adapters.RecipeAdapter;
+import com.example.mealfinder.objects.Recipe;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.FirebaseAuth;
@@ -22,6 +27,8 @@ import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
 import com.google.firebase.storage.UploadTask;
 
+import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Map;
 import java.io.File;
 
@@ -33,6 +40,7 @@ public class Profile extends AppCompatActivity implements View.OnClickListener {
     private Button logoutProfileBtn;
     private FirebaseDatabase db;
     private FirebaseStorage stor;
+    private RecyclerView rvProfile;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -44,8 +52,19 @@ public class Profile extends AppCompatActivity implements View.OnClickListener {
         tvProfileHello = findViewById(R.id.tvProfileHello);
         profileBackBtn = findViewById(R.id.profileBackBtn);
         logoutProfileBtn = findViewById(R.id.logoutProfileBtn);
+        rvProfile = findViewById(R.id.rvProfile);
         profileBackBtn.setOnClickListener(this);
         logoutProfileBtn.setOnClickListener(this);
+
+        ArrayList<Recipe> recipes = new ArrayList<>();
+        recipes.add(new Recipe("Hamburger", "Alon", "1234", "Meat patty between two breads", "cook the meat patty then add between breads", null, null, null, Arrays.asList(new String[]{"burger", "meat", "tasty"})));
+        recipes.add(new Recipe("Lasagna", "Alon", "1234", "Pasta cake", "cook the lasagna sheets in water about halfway through to done and then layer in the oven with pasta sauce and cheese", null, null, null, Arrays.asList(new String[]{"lasagna", "pasta", "OMG"})));
+
+        RecyclerView.LayoutManager layoutManager = new LinearLayoutManager(this);
+        rvProfile.setLayoutManager(layoutManager);
+
+        ProfileRecipeAdapter profileRecipeAdapter = new ProfileRecipeAdapter(recipes);
+        rvProfile.setAdapter(profileRecipeAdapter);
     }
 
     @Override
@@ -73,21 +92,6 @@ public class Profile extends AppCompatActivity implements View.OnClickListener {
                     username[0] = ((Map<String, Object>)task.getResult().getValue()).get("username").toString();
                     Log.d(TAG, "username = " + username[0]);
                     tvProfileHello.setText("Hey " + username[0] + "!");
-                }
-            }
-        });
-        db.getReference().child("users").child(user.getUid()).get().addOnCompleteListener(new OnCompleteListener<DataSnapshot>() {
-            @Override
-            public void onComplete(@NonNull Task<DataSnapshot> task) {
-                if (!task.isSuccessful()) {
-                    Log.e("firebase", "Error getting data", task.getException());
-                }
-                else {
-                    Object[] image = new File[1];
-                    image[0] = ((Map<String, Object>)task.getResult().getValue()).get("image");
-                    if (image == null) {
-
-                    }
                 }
             }
         });

@@ -12,6 +12,7 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.ImageButton;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.example.mealfinder.R;
 import com.example.mealfinder.adapters.*;
@@ -21,10 +22,13 @@ import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
 
 import java.io.File;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Map;
 
 public class Main extends AppCompatActivity implements View.OnClickListener {
@@ -38,6 +42,9 @@ public class Main extends AppCompatActivity implements View.OnClickListener {
     private TextView tvMainHello;
     private FirebaseDatabase db;
     private Button moreMainBtn;
+    private ArrayList<Recipe> recipes;
+    private View.OnClickListener onItemClickListener;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -55,16 +62,44 @@ public class Main extends AppCompatActivity implements View.OnClickListener {
         mainFyBtn.setOnClickListener(this);
         moreMainBtn.setOnClickListener(this);
 
-        ArrayList<Recipe> recipes = new ArrayList<>();
-        recipes.add(new Recipe("Hamburger", "Alon", "1234", "Meat patty between two breads", "cook the meat patty then add between breads", null, null, null, new String[]{"burger", "meat", "tasty"}));
-        recipes.add(new Recipe("Pizza", "Tal", "5678", "flatbread with sauce and cheese", "make the flatbread, spread sauce and cheese then put in the oven", null, null, null, new String[]{"Pizza", "cheese", "sharing"}));
+//        recipes = new ArrayList<>();
+//        recipes.add(new Recipe("Hamburger", "Alon", "1234", "Meat patty between two breads", "cook the meat patty then add between breads", null, null, null, Arrays.asList(new String[]{"burger", "meat", "tasty"})));
+//        recipes.add(new Recipe("Pizza", "Tal", "5678", "flatbread with sauce and cheese", "make the flatbread, spread sauce and cheese then put in the oven", null, null, null, Arrays.asList(new String[]{"Pizza", "cheese", "sharing"})));
+
+        onItemClickListener = new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                RecyclerView.ViewHolder viewHolder = (RecyclerView.ViewHolder) view.getTag();
+                int position = viewHolder.getAdapterPosition();
+                Recipe recipe = recipes.get(position);
+                Toast.makeText(Main.this, recipe.getName(), Toast.LENGTH_SHORT).show();
+            }
+        };
 
         rvMain = findViewById(R.id.rvMain);
         RecyclerView.LayoutManager layoutManager = new LinearLayoutManager(this);
         rvMain.setLayoutManager(layoutManager);
 
-        RecipeAdapter recipeAdapter = new RecipeAdapter(recipes);
-        rvMain.setAdapter(recipeAdapter);
+
+
+        db.getReference().child("recipes").addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                recipes = new ArrayList<>();
+                for (DataSnapshot recipeSnapshot : dataSnapshot.getChildren()) {
+                    recipes.add(recipeSnapshot.getValue(Recipe.class));
+                }
+                RecipeAdapter recipeAdapter = new RecipeAdapter(recipes);
+                rvMain.setAdapter(recipeAdapter);
+                recipeAdapter.setmOnItemClickListener(onItemClickListener);
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError error) {
+
+            }
+        });
+        Log.d(TAG, "finished loading recycler view");
     }
 
     @Override
@@ -114,21 +149,6 @@ public class Main extends AppCompatActivity implements View.OnClickListener {
                     username[0] = ((Map<String, Object>)task.getResult().getValue()).get("username").toString();
                     Log.d(TAG, "username = " + username[0]);
                     tvMainHello.setText("Hello " + username[0] + "!");
-                }
-            }
-        });
-        db.getReference().child("users").child(user.getUid()).get().addOnCompleteListener(new OnCompleteListener<DataSnapshot>() {
-            @Override
-            public void onComplete(@NonNull Task<DataSnapshot> task) {
-                if (!task.isSuccessful()) {
-                    Log.e("firebase", "Error getting data", task.getException());
-                }
-                else {
-                    Object[] image = new File[1];
-                    image[0] = ((Map<String, Object>)task.getResult().getValue()).get("image");
-                    if (image == null) {
-
-                    }
                 }
             }
         });

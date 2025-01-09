@@ -16,9 +16,14 @@ import java.util.ArrayList;
 
 public class RecipeAdapter extends RecyclerView.Adapter<RecipeAdapter.RecipeViewHolder> {
     private ArrayList<Recipe> recipes;
+    private View.OnClickListener mOnItemClickListener;
 
     public RecipeAdapter(ArrayList<Recipe> recipes) {
         this.recipes = recipes;
+    }
+
+    public void setmOnItemClickListener(View.OnClickListener itemClickListener) {
+        this.mOnItemClickListener = itemClickListener;
     }
 
     @NonNull
@@ -42,7 +47,7 @@ public class RecipeAdapter extends RecyclerView.Adapter<RecipeAdapter.RecipeView
         return recipes.size();
     }
 
-    public static class RecipeViewHolder extends RecyclerView.ViewHolder {
+    public class RecipeViewHolder extends RecyclerView.ViewHolder {
 //        public ImageView ivRecipe;
         public TextView tvRecipeName;
         public TextView tvRecipeCreator;
@@ -54,6 +59,9 @@ public class RecipeAdapter extends RecyclerView.Adapter<RecipeAdapter.RecipeView
             tvRecipeName = itemView.findViewById(R.id.tvRecipeName);
             tvRecipeCreator = itemView.findViewById(R.id.tvRecipeCreator);
             tvRecipeLikes = itemView.findViewById(R.id.tvRecipeLikes);
+
+            itemView.setTag(this);
+            itemView.setOnClickListener(mOnItemClickListener);
         }
     }
 }

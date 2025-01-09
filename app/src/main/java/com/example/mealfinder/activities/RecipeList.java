@@ -12,18 +12,21 @@ import androidx.appcompat.app.AppCompatActivity;
 import com.example.mealfinder.R;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.database.FirebaseDatabase;
 
 public class RecipeList extends AppCompatActivity implements View.OnClickListener {
     private FirebaseAuth mAuth;
     private TextView tvListTitle;
     private Button recipe_item1Btn;
     private ImageButton listBackBtn;
+    private FirebaseDatabase db;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.recipe_list);
         mAuth = FirebaseAuth.getInstance();
+        db = FirebaseDatabase.getInstance();
         tvListTitle = findViewById(R.id.tvListTitle);
         recipe_item1Btn = findViewById(R.id.recipe_item1Btn);
         listBackBtn = findViewById(R.id.listBackBtn);

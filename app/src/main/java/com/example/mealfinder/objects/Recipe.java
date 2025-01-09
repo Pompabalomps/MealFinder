@@ -1,6 +1,7 @@
 package com.example.mealfinder.objects;
 
 import java.util.Date;
+import java.util.List;
 
 public class Recipe {
     private String id; // Recipe id (userId+createDate)
@@ -15,10 +16,10 @@ public class Recipe {
     private String img3;
     private int likes; // Amount of concurrent recipe likes
     private double rating; // Recipe rating
-    private String[] tags; // Array of recipe tags
+    private List<String> tags; // Array of recipe tags
 
 
-    public Recipe(String name, String creatorName, String userId, String desc, String steps, String img1, String img2, String img3, String[] tags){
+    public Recipe(String name, String creatorName, String userId, String desc, String steps, String img1, String img2, String img3, List<String> tags){
         this.createDate = new Date();
         this.id = userId + createDate.getTime();
         this.name = name;
@@ -32,6 +33,22 @@ public class Recipe {
         this.likes = 0;
         this.rating = 0;
         this.tags = tags;
+    }
+
+    public Recipe() {
+        this.createDate = new Date();
+        this.id = "" + createDate.getTime();
+        this.name = "";
+        this.creatorName = "";
+        this.userId = "";
+        this.desc = "";
+        this.steps = "";
+        this.img1 = "";
+        this.img2 = "";
+        this.img3 = "";
+        this.likes = 0;
+        this.rating = 0;
+        this.tags = null;
     }
 
     public String getId() {
@@ -130,11 +147,11 @@ public class Recipe {
         this.rating = rating;
     }
 
-    public String[] getTags() {
+    public List<String> getTags() {
         return tags;
     }
 
-    public void setTags(String[] tags) {
+    public void setTags(List<String> tags) {
         this.tags = tags;
     }
 }
