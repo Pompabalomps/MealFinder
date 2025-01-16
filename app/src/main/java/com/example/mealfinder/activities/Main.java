@@ -39,7 +39,6 @@ public class Main extends AppCompatActivity implements View.OnClickListener {
     private FirebaseAuth mAuth;
     private Button mainFyBtn;
     private RecyclerView rvMain;
-    private TextView tvMainHello;
     private FirebaseDatabase db;
     private Button moreMainBtn;
     private ArrayList<Recipe> recipes;
@@ -55,7 +54,6 @@ public class Main extends AppCompatActivity implements View.OnClickListener {
         ibMainSearch = findViewById(R.id.ibMainSearch);
         ibMainProfile = findViewById(R.id.ibMainProfile);
         mainFyBtn = findViewById(R.id.mainFyBtn);
-        tvMainHello = findViewById(R.id.tvMainHello);
         moreMainBtn = findViewById(R.id.moreMainBtn);
         ibMainSearch.setOnClickListener(this);
         ibMainProfile.setOnClickListener(this);
@@ -66,13 +64,15 @@ public class Main extends AppCompatActivity implements View.OnClickListener {
 //        recipes.add(new Recipe("Hamburger", "Alon", "1234", "Meat patty between two breads", "cook the meat patty then add between breads", null, null, null, Arrays.asList(new String[]{"burger", "meat", "tasty"})));
 //        recipes.add(new Recipe("Pizza", "Tal", "5678", "flatbread with sauce and cheese", "make the flatbread, spread sauce and cheese then put in the oven", null, null, null, Arrays.asList(new String[]{"Pizza", "cheese", "sharing"})));
 
+        Intent i = new Intent(this, EditRecipe.class);
         onItemClickListener = new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 RecyclerView.ViewHolder viewHolder = (RecyclerView.ViewHolder) view.getTag();
                 int position = viewHolder.getAdapterPosition();
                 Recipe recipe = recipes.get(position);
-                Toast.makeText(Main.this, recipe.getName(), Toast.LENGTH_SHORT).show();
+                i.putExtra("rec", recipe);
+                startActivity(i);
             }
         };
 
@@ -138,19 +138,6 @@ public class Main extends AppCompatActivity implements View.OnClickListener {
     }
 
     private void reload(FirebaseUser user) {
-        final String[] username = new String[1];
-        db.getReference().child("users").child(user.getUid()).get().addOnCompleteListener(new OnCompleteListener<DataSnapshot>() {
-            @Override
-            public void onComplete(@NonNull Task<DataSnapshot> task) {
-                if (!task.isSuccessful()) {
-                    Log.e("firebase", "Error getting data", task.getException());
-                }
-                else {
-                    username[0] = ((Map<String, Object>)task.getResult().getValue()).get("username").toString();
-                    Log.d(TAG, "username = " + username[0]);
-                    tvMainHello.setText("Hello " + username[0] + "!");
-                }
-            }
-        });
+        return;
     }
 }

@@ -22,13 +22,18 @@ import androidx.core.content.FileProvider;
 
 import com.example.mealfinder.R;
 import com.example.mealfinder.objects.Recipe;
+import com.google.android.gms.tasks.Continuation;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.storage.FirebaseStorage;
+import com.google.firebase.storage.StorageReference;
+import com.google.firebase.storage.UploadTask;
 
+import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.IOException;
 import java.text.SimpleDateFormat;
@@ -50,10 +55,16 @@ public class EditRecipe extends AppCompatActivity implements View.OnClickListene
     private ImageButton addImageIb3;
     private FirebaseAuth mAuth;
     private FirebaseDatabase db;
+    private StorageReference storRef;
+    private UploadTask uploadTask;
+    private Uri downloadUri;
     private final String[] u = new String[1];
     private String username;
     private static final int REQUEST_TAKE_PHOTO = 1;
     private String currentPhotoPath;
+    private Uri img1downloadUrl;
+    private Uri img2downloadUrl;
+    private Uri img3downloadUrl;
     private Bitmap bitmap;
     private int currentIB;
 
@@ -61,8 +72,11 @@ public class EditRecipe extends AppCompatActivity implements View.OnClickListene
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.edit_recipe);
+        Intent i = getIntent();
+        Recipe rec = (Recipe)i.getSerializableExtra("rec");
         mAuth = FirebaseAuth.getInstance();
         db = FirebaseDatabase.getInstance();
+        storRef = FirebaseStorage.getInstance().getReference();
         editRBackBtn = findViewById(R.id.editRBackBtn);
         saveRecipeBtn = findViewById(R.id.saveRecipeBtn);
         etRecipeName = findViewById(R.id.etRecipeName);
@@ -77,6 +91,30 @@ public class EditRecipe extends AppCompatActivity implements View.OnClickListene
         addImageIb1.setOnClickListener(this);
         addImageIb2.setOnClickListener(this);
         addImageIb3.setOnClickListener(this);
+        saveRecipeBtn.setEnabled(false);
+
+        if (rec != null) {
+            etRecipeName.setText(rec.getName());
+            etRecipeInstr.setText(rec.getSteps());
+            etRecipeDesc.setText(rec.getDesc());
+            etRecipeTags.setText(String.join(",", rec.getTags()));
+//            img1currentPhotoPath = rec.getImg1();
+//            img2currentPhotoPath = rec.getImg2();
+//            img3currentPhotoPath = rec.getImg3();
+
+//            if (!img1currentPhotoPath.equals("null")) {
+//                currentPhotoPath = img1currentPhotoPath;
+//                setPic(addImageIb1);
+//            }
+//            if (!img2currentPhotoPath.equals("null")) {
+//                currentPhotoPath = img2currentPhotoPath;
+//                setPic(addImageIb2);
+//            }
+//            if (!img3currentPhotoPath.equals("null")) {
+//                currentPhotoPath = img3currentPhotoPath;
+//                setPic(addImageIb3);
+//            }
+        }
 
         readUsername(s -> {
             u[0] = s;
@@ -108,7 +146,7 @@ public class EditRecipe extends AppCompatActivity implements View.OnClickListene
         if (v.getId() == R.id.saveRecipeBtn) {
             FirebaseUser currentUser = mAuth.getCurrentUser();
             String[] tags = etRecipeTags.getText().toString().split(",");
-            Recipe recipe = new Recipe(etRecipeName.getText().toString(), username, currentUser.getUid().toString(), etRecipeDesc.getText().toString(), etRecipeInstr.getText().toString(), "img1","img2","img3", Arrays.asList(tags));
+            Recipe recipe = new Recipe(etRecipeName.getText().toString(), username, currentUser.getUid().toString(), etRecipeDesc.getText().toString(), etRecipeInstr.getText().toString(), img1downloadUrl.toString(), img2downloadUrl.toString(), img3downloadUrl.toString(), Arrays.asList(tags));
             db.getReference().child("recipes").child(recipe.getId()).setValue(recipe);
             Intent i = new Intent(this, RecipeList.class);
             startActivity(i);
@@ -154,12 +192,21 @@ public class EditRecipe extends AppCompatActivity implements View.OnClickListene
             switch (currentIB) {
                 case 1:
                     setPic(addImageIb1);
+                    uploadFullImage();
+                    uploadCompressedImage();
+                    img1downloadUrl = downloadUri;
                     break;
                 case 2:
                     setPic(addImageIb2);
+                    uploadFullImage();
+                    uploadCompressedImage();
+                    img2downloadUrl = downloadUri;
                     break;
                 case 3:
                     setPic(addImageIb3);
+                    uploadFullImage();
+                    uploadCompressedImage();
+                    img3downloadUrl = downloadUri;
                     break;
                 default:
             }
@@ -226,5 +273,57 @@ public class EditRecipe extends AppCompatActivity implements View.OnClickListene
         // Save a file: path for use with ACTION_VIEW intents
         currentPhotoPath = image.getAbsolutePath();
         return image;
+    }
+
+    private void uploadCompressedImage() {
+        ByteArrayOutputStream baos = new ByteArrayOutputStream();
+        bitmap.compress(Bitmap.CompressFormat.JPEG, 100, baos);
+        byte[] data = baos.toByteArray();
+
+        Uri file = Uri.fromFile(new File(currentPhotoPath));
+        final StorageReference reverseRef = storRef.child("compressed_images/"+file.getLastPathSegment());
+        UploadTask uploadTask = reverseRef.putBytes(data);
+        Task<Uri> uriTask = uploadTask.continueWithTask(new Continuation<UploadTask.TaskSnapshot, Task<Uri>>() {
+            @Override
+            public Task<Uri> then(@NonNull Task<UploadTask.TaskSnapshot> task) throws Exception {
+                if (!task.isSuccessful()) {
+                    throw task.getException();
+                }
+
+                return reverseRef.getDownloadUrl();
+            }
+        }).addOnCompleteListener(new OnCompleteListener<Uri>() {
+            @Override
+            public void onComplete(@NonNull Task<Uri> task) {
+                if (task.isSuccessful()) {
+                    downloadUri = task.getResult();
+                    saveRecipeBtn.setEnabled(true);
+                }
+            }
+        });
+    }
+
+    private void uploadFullImage() {
+        Uri file = Uri.fromFile(new File(currentPhotoPath));
+        final StorageReference reverseRef = storRef.child("images/"+file.getLastPathSegment());
+        uploadTask = reverseRef.putFile(file);
+        Task<Uri> uriTask = uploadTask.continueWithTask(new Continuation<UploadTask.TaskSnapshot, Task<Uri>>() {
+            @Override
+            public Task<Uri> then(@NonNull Task<UploadTask.TaskSnapshot> task) throws Exception {
+                if (!task.isSuccessful()) {
+                    throw task.getException();
+                }
+
+                return reverseRef.getDownloadUrl();
+            }
+        }).addOnCompleteListener(new OnCompleteListener<Uri>() {
+            @Override
+            public void onComplete(@NonNull Task<Uri> task) {
+                if (task.isSuccessful()) {
+                    downloadUri = task.getResult();
+                    saveRecipeBtn.setEnabled(true);
+                }
+            }
+        });
     }
 }

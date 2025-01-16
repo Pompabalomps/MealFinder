@@ -1,9 +1,11 @@
 package com.example.mealfinder.objects;
 
+import java.io.Serializable;
+
 import java.util.Date;
 import java.util.List;
 
-public class Recipe {
+public class Recipe implements Serializable {
     private String id; // Recipe id (userId+createDate)
     private Date createDate; // Recipe creation date
     private String name; // Recipe name
