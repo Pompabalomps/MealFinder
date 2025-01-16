@@ -30,6 +30,7 @@ import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.storage.FirebaseStorage;
+import com.google.firebase.storage.StorageMetadata;
 import com.google.firebase.storage.StorageReference;
 import com.google.firebase.storage.UploadTask;
 
@@ -55,18 +56,18 @@ public class EditRecipe extends AppCompatActivity implements View.OnClickListene
     private ImageButton addImageIb3;
     private FirebaseAuth mAuth;
     private FirebaseDatabase db;
-    private StorageReference storRef;
+    private FirebaseStorage stor;
     private UploadTask uploadTask;
-    private Uri downloadUri;
+    private static Uri downloadUri;
     private final String[] u = new String[1];
     private String username;
     private static final int REQUEST_TAKE_PHOTO = 1;
     private String currentPhotoPath;
-    private Uri img1downloadUrl;
-    private Uri img2downloadUrl;
-    private Uri img3downloadUrl;
+    private static Uri img1downloadUrl;
+    private static Uri img2downloadUrl;
+    private static Uri img3downloadUrl;
     private Bitmap bitmap;
-    private int currentIB;
+    private static int currentIB;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -76,7 +77,7 @@ public class EditRecipe extends AppCompatActivity implements View.OnClickListene
         Recipe rec = (Recipe)i.getSerializableExtra("rec");
         mAuth = FirebaseAuth.getInstance();
         db = FirebaseDatabase.getInstance();
-        storRef = FirebaseStorage.getInstance().getReference();
+        stor = FirebaseStorage.getInstance();
         editRBackBtn = findViewById(R.id.editRBackBtn);
         saveRecipeBtn = findViewById(R.id.saveRecipeBtn);
         etRecipeName = findViewById(R.id.etRecipeName);
@@ -276,13 +277,16 @@ public class EditRecipe extends AppCompatActivity implements View.OnClickListene
     }
 
     private void uploadCompressedImage() {
+        StorageMetadata metadata = new StorageMetadata.Builder()
+                .setContentType("image/jpeg")
+                .build();
         ByteArrayOutputStream baos = new ByteArrayOutputStream();
         bitmap.compress(Bitmap.CompressFormat.JPEG, 100, baos);
         byte[] data = baos.toByteArray();
 
         Uri file = Uri.fromFile(new File(currentPhotoPath));
-        final StorageReference reverseRef = storRef.child("compressed_images/"+file.getLastPathSegment());
-        UploadTask uploadTask = reverseRef.putBytes(data);
+        final StorageReference reverseRef = stor.getReference().child("compressed_images").child(file.getLastPathSegment());
+        UploadTask uploadTask = reverseRef.putBytes(data, metadata);
         Task<Uri> uriTask = uploadTask.continueWithTask(new Continuation<UploadTask.TaskSnapshot, Task<Uri>>() {
             @Override
             public Task<Uri> then(@NonNull Task<UploadTask.TaskSnapshot> task) throws Exception {
@@ -304,9 +308,12 @@ public class EditRecipe extends AppCompatActivity implements View.OnClickListene
     }
 
     private void uploadFullImage() {
+        StorageMetadata metadata = new StorageMetadata.Builder()
+                .setContentType("image/jpeg")
+                .build();
         Uri file = Uri.fromFile(new File(currentPhotoPath));
-        final StorageReference reverseRef = storRef.child("images/"+file.getLastPathSegment());
-        uploadTask = reverseRef.putFile(file);
+        final StorageReference reverseRef = stor.getReference().child("images").child(file.getLastPathSegment());
+        uploadTask = reverseRef.putFile(file, metadata);
         Task<Uri> uriTask = uploadTask.continueWithTask(new Continuation<UploadTask.TaskSnapshot, Task<Uri>>() {
             @Override
             public Task<Uri> then(@NonNull Task<UploadTask.TaskSnapshot> task) throws Exception {

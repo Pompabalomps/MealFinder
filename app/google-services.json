@@ -1,8 +1,9 @@
 {
   "project_info": {
     "project_number": "804295794196",
+    "firebase_url": "https://mealfinder-c6253-default-rtdb.firebaseio.com",
     "project_id": "mealfinder-c6253",
-    "storage_bucket": "mealfinder-c6253.appspot.com"
+    "storage_bucket": "mealfinder-c6253.firebasestorage.app"
   },
   "client": [
     {
