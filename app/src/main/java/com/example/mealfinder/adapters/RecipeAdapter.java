@@ -9,6 +9,7 @@ import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.bumptech.glide.Glide;
 import com.example.mealfinder.R;
 import com.example.mealfinder.objects.*;
 
@@ -38,8 +39,11 @@ public class RecipeAdapter extends RecyclerView.Adapter<RecipeAdapter.RecipeView
         Recipe recipe = recipes.get(position);
         holder.tvRecipeName.setText(recipe.getName());
         holder.tvRecipeCreator.setText(recipe.getCreatorName());
-        holder.tvRecipeLikes.setText(String.valueOf(recipe.getRating()));
-//        holder.ivRecipe.setImageResource(holder.tvRecipeName.getResources().getIdentifier(recipe.getImg1(), "drawable", holder.tvRecipeName.getContext().getOpPackageName()));
+        holder.tvRecipeRating.setText(String.valueOf(recipe.getRating()));
+
+        Glide.with(holder.ivRecipe.getContext())
+                .load(recipe.getImg1())
+                .into(holder.ivRecipe);
     }
 
     @Override
@@ -48,17 +52,17 @@ public class RecipeAdapter extends RecyclerView.Adapter<RecipeAdapter.RecipeView
     }
 
     public class RecipeViewHolder extends RecyclerView.ViewHolder {
-//        public ImageView ivRecipe;
         public TextView tvRecipeName;
         public TextView tvRecipeCreator;
-        public TextView tvRecipeLikes;
+        public TextView tvRecipeRating;
+        public ImageView ivRecipe;
 
         public RecipeViewHolder(@NonNull View itemView) {
             super(itemView);
-//            ivRecipe = itemView.findViewById(R.id.ivRecipe);
             tvRecipeName = itemView.findViewById(R.id.tvRecipeName);
             tvRecipeCreator = itemView.findViewById(R.id.tvRecipeCreator);
-            tvRecipeLikes = itemView.findViewById(R.id.tvRecipeLikes);
+            tvRecipeRating = itemView.findViewById(R.id.tvRecipeRating);
+            ivRecipe = itemView.findViewById(R.id.ivRecipe);
 
             itemView.setTag(this);
             itemView.setOnClickListener(mOnItemClickListener);

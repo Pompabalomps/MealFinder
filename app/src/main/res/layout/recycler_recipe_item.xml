@@ -7,14 +7,14 @@
     android:background="@color/milk">
 
     <ImageView
-        android:id="@+id/ivRecipe"
+        android:id="@+id/ivRecipeLikes"
         android:layout_width="60dp"
         android:layout_height="60dp"
         android:layout_marginTop="10dp"
         android:layout_marginEnd="10dp"
         android:layout_marginBottom="5dp"
         app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toStartOf="@+id/ivRecipeLikes"
+        app:layout_constraintEnd_toStartOf="@+id/ivRecipeRating"
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintVertical_bias="0.0"
         app:srcCompat="@drawable/heart" />
@@ -31,8 +31,8 @@
         android:text="RecipeName"
         android:textColor="@color/black"
         android:textSize="20dp"
-        app:layout_constraintEnd_toStartOf="@+id/ivRecipe"
-        app:layout_constraintStart_toEndOf="@+id/imageView2"
+        app:layout_constraintEnd_toStartOf="@+id/ivRecipeLikes"
+        app:layout_constraintStart_toEndOf="@+id/ivRecipe"
         app:layout_constraintTop_toTopOf="parent" />
 
     <TextView
@@ -47,12 +47,12 @@
         android:text="RecipeCreator"
         android:textColor="@color/gray"
         android:textSize="12dp"
-        app:layout_constraintEnd_toStartOf="@+id/ivRecipe"
-        app:layout_constraintStart_toEndOf="@+id/imageView2"
+        app:layout_constraintEnd_toStartOf="@+id/ivRecipeLikes"
+        app:layout_constraintStart_toEndOf="@+id/ivRecipe"
         app:layout_constraintTop_toBottomOf="@+id/tvRecipeName" />
 
     <ImageView
-        android:id="@+id/ivRecipeLikes"
+        android:id="@+id/ivRecipeRating"
         android:layout_width="40dp"
         android:layout_height="40dp"
         android:layout_marginTop="20dp"
@@ -62,7 +62,7 @@
         app:srcCompat="@drawable/star" />
 
     <TextView
-        android:id="@+id/tvRecipeLikes"
+        android:id="@+id/tvRecipeRating"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:fontFamily="@font/kollektif_italic"
@@ -70,13 +70,13 @@
         android:text="RecipeRating"
         android:textColor="@color/black"
         android:textSize="10dp"
-        app:layout_constraintBottom_toBottomOf="@+id/ivRecipeLikes"
-        app:layout_constraintEnd_toEndOf="@+id/ivRecipeLikes"
-        app:layout_constraintStart_toStartOf="@+id/ivRecipeLikes"
-        app:layout_constraintTop_toTopOf="@+id/ivRecipeLikes" />
+        app:layout_constraintBottom_toBottomOf="@+id/ivRecipeRating"
+        app:layout_constraintEnd_toEndOf="@+id/ivRecipeRating"
+        app:layout_constraintStart_toStartOf="@+id/ivRecipeRating"
+        app:layout_constraintTop_toTopOf="@+id/ivRecipeRating" />
 
     <ImageView
-        android:id="@+id/imageView2"
+        android:id="@+id/ivRecipe"
         android:layout_width="60dp"
         android:layout_height="60dp"
         android:layout_marginStart="20dp"

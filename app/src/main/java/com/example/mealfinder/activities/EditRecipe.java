@@ -4,6 +4,7 @@ import android.annotation.SuppressLint;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.graphics.Matrix;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.Environment;
@@ -38,6 +39,7 @@ import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.IOException;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Date;
 import java.util.List;
@@ -93,6 +95,9 @@ public class EditRecipe extends AppCompatActivity implements View.OnClickListene
         addImageIb2.setOnClickListener(this);
         addImageIb3.setOnClickListener(this);
         saveRecipeBtn.setEnabled(false);
+        img1downloadUrl = Uri.EMPTY;
+        img2downloadUrl = Uri.EMPTY;
+        img3downloadUrl = Uri.EMPTY;
 
         if (rec != null) {
             etRecipeName.setText(rec.getName());
@@ -147,9 +152,10 @@ public class EditRecipe extends AppCompatActivity implements View.OnClickListene
         if (v.getId() == R.id.saveRecipeBtn) {
             FirebaseUser currentUser = mAuth.getCurrentUser();
             String[] tags = etRecipeTags.getText().toString().split(",");
-            Recipe recipe = new Recipe(etRecipeName.getText().toString(), username, currentUser.getUid().toString(), etRecipeDesc.getText().toString(), etRecipeInstr.getText().toString(), img1downloadUrl.toString(), img2downloadUrl.toString(), img3downloadUrl.toString(), Arrays.asList(tags));
+            Recipe recipe = new Recipe(etRecipeName.getText().toString(), username, currentUser.getUid().toString(), etRecipeDesc.getText().toString(), etRecipeInstr.getText().toString(), !img1downloadUrl.equals(Uri.EMPTY) ? img1downloadUrl.toString() : "", !img2downloadUrl.equals(Uri.EMPTY) ? img2downloadUrl.toString() : "", !img3downloadUrl.equals(Uri.EMPTY) ? img3downloadUrl.toString() : "", Arrays.asList(tags));
             db.getReference().child("recipes").child(recipe.getId()).setValue(recipe);
-            Intent i = new Intent(this, RecipeList.class);
+            Intent i = new Intent(this, RecipeDetails.class);
+            i.putExtra("rec", recipe);
             startActivity(i);
         }
 
@@ -195,19 +201,16 @@ public class EditRecipe extends AppCompatActivity implements View.OnClickListene
                     setPic(addImageIb1);
                     uploadFullImage();
                     uploadCompressedImage();
-                    img1downloadUrl = downloadUri;
                     break;
                 case 2:
                     setPic(addImageIb2);
                     uploadFullImage();
                     uploadCompressedImage();
-                    img2downloadUrl = downloadUri;
                     break;
                 case 3:
                     setPic(addImageIb3);
                     uploadFullImage();
                     uploadCompressedImage();
-                    img3downloadUrl = downloadUri;
                     break;
                 default:
             }
@@ -281,7 +284,11 @@ public class EditRecipe extends AppCompatActivity implements View.OnClickListene
                 .setContentType("image/jpeg")
                 .build();
         ByteArrayOutputStream baos = new ByteArrayOutputStream();
-        bitmap.compress(Bitmap.CompressFormat.JPEG, 100, baos);
+        Matrix matrix = new Matrix();
+        matrix.postRotate(0);
+        Bitmap scaledBitmap = Bitmap.createScaledBitmap(bitmap, bitmap.getWidth(), bitmap.getHeight(), true);
+        Bitmap rotatedBitmap = Bitmap.createBitmap(scaledBitmap, 0, 0, scaledBitmap.getWidth(), scaledBitmap.getHeight(), matrix, true);
+        rotatedBitmap.compress(Bitmap.CompressFormat.JPEG, 100, baos);
         byte[] data = baos.toByteArray();
 
         Uri file = Uri.fromFile(new File(currentPhotoPath));
@@ -301,6 +308,18 @@ public class EditRecipe extends AppCompatActivity implements View.OnClickListene
             public void onComplete(@NonNull Task<Uri> task) {
                 if (task.isSuccessful()) {
                     downloadUri = task.getResult();
+                    switch (currentIB) {
+                        case 1:
+                            img1downloadUrl = downloadUri;
+                            break;
+                        case 2:
+                            img2downloadUrl = downloadUri;
+                            break;
+                        case 3:
+                            img3downloadUrl = downloadUri;
+                            break;
+                        default:
+                    }
                     saveRecipeBtn.setEnabled(true);
                 }
             }
@@ -328,6 +347,18 @@ public class EditRecipe extends AppCompatActivity implements View.OnClickListene
             public void onComplete(@NonNull Task<Uri> task) {
                 if (task.isSuccessful()) {
                     downloadUri = task.getResult();
+                    switch (currentIB) {
+                        case 1:
+                            img1downloadUrl = downloadUri;
+                            break;
+                        case 2:
+                            img2downloadUrl = downloadUri;
+                            break;
+                        case 3:
+                            img3downloadUrl = downloadUri;
+                            break;
+                        default:
+                    }
                     saveRecipeBtn.setEnabled(true);
                 }
             }
