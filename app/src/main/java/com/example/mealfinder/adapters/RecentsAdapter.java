@@ -15,9 +15,9 @@ import com.example.mealfinder.objects.*;
 import java.util.ArrayList;
 
 public class RecentsAdapter extends RecyclerView.Adapter<RecentsAdapter.RecentViewHolder> {
-    private ArrayList<String> recents;
+    private ArrayList<SearchQuery> recents;
 
-    public RecentsAdapter(ArrayList<String> recents) {
+    public RecentsAdapter(ArrayList<SearchQuery> recents) {
         this.recents = recents;
     }
 
@@ -30,8 +30,8 @@ public class RecentsAdapter extends RecyclerView.Adapter<RecentsAdapter.RecentVi
 
     @Override
     public void onBindViewHolder(@NonNull RecentViewHolder holder, int position) {
-        String recent = recents.get(position);
-        holder.tvRecentName.setText(recent);
+        SearchQuery recent = recents.get(position);
+        holder.tvRecentName.setText(recent.getQuery());
     }
 
     @Override

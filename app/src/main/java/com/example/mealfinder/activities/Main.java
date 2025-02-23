@@ -64,7 +64,8 @@ public class Main extends AppCompatActivity implements View.OnClickListener {
 //        recipes.add(new Recipe("Hamburger", "Alon", "1234", "Meat patty between two breads", "cook the meat patty then add between breads", null, null, null, Arrays.asList(new String[]{"burger", "meat", "tasty"})));
 //        recipes.add(new Recipe("Pizza", "Tal", "5678", "flatbread with sauce and cheese", "make the flatbread, spread sauce and cheese then put in the oven", null, null, null, Arrays.asList(new String[]{"Pizza", "cheese", "sharing"})));
 
-        Intent i = new Intent(this, EditRecipe.class);
+//        Intent i = new Intent(this, EditRecipe.class);
+        Intent i = new Intent(this, RecipeDetails.class);
         onItemClickListener = new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -72,6 +73,8 @@ public class Main extends AppCompatActivity implements View.OnClickListener {
                 int position = viewHolder.getAdapterPosition();
                 Recipe recipe = recipes.get(position);
                 i.putExtra("rec", recipe);
+//                i.putExtra("rec", recipe);
+//                i.putExtra("isExists", true);
                 startActivity(i);
             }
         };

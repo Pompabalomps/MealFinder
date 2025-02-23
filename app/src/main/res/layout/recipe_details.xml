@@ -8,6 +8,78 @@
     android:orientation="vertical"
     android:background="@drawable/bg">
 
+    <ImageView
+        android:id="@+id/ivRecImg1_1"
+        android:layout_width="100dp"
+        android:layout_height="100dp"
+        android:layout_marginTop="15dp"
+        android:background="@drawable/blankbg"
+        android:scaleType="fitCenter"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/imageView2"
+        app:srcCompat="@drawable/plus" />
+
+    <ImageView
+        android:id="@+id/ivRecImg3_2"
+        android:layout_width="100dp"
+        android:layout_height="100dp"
+        android:layout_marginTop="15dp"
+        android:background="@drawable/blankbg"
+        android:scaleType="fitCenter"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/imageView2"
+        app:srcCompat="@drawable/plus" />
+
+    <ImageView
+        android:id="@+id/ivRecImg3_3"
+        android:layout_width="100dp"
+        android:layout_height="100dp"
+        android:layout_marginTop="15dp"
+        android:background="@drawable/blankbg"
+        android:scaleType="fitCenter"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toEndOf="@+id/ivRecImg1_1"
+        app:layout_constraintTop_toBottomOf="@+id/imageView2"
+        app:srcCompat="@drawable/plus" />
+
+    <ImageView
+        android:id="@+id/ivRecImg3_1"
+        android:layout_width="100dp"
+        android:layout_height="100dp"
+        android:layout_marginTop="15dp"
+        android:background="@drawable/blankbg"
+        android:scaleType="fitCenter"
+        app:layout_constraintEnd_toStartOf="@+id/ivRecImg1_1"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/imageView2"
+        app:srcCompat="@drawable/plus" />
+
+    <ImageView
+        android:id="@+id/ivRecImg2_1"
+        android:layout_width="100dp"
+        android:layout_height="100dp"
+        android:layout_marginTop="15dp"
+        android:background="@drawable/blankbg"
+        android:scaleType="fitCenter"
+        app:layout_constraintEnd_toStartOf="@id/ivRecImg2_2"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/imageView2"
+        app:srcCompat="@drawable/plus" />
+
+    <ImageView
+        android:id="@+id/ivRecImg2_2"
+        android:layout_width="100dp"
+        android:layout_height="100dp"
+        android:layout_marginTop="15dp"
+        android:background="@drawable/blankbg"
+        android:scaleType="fitCenter"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toEndOf="@+id/ivRecImg2_1"
+        app:layout_constraintTop_toBottomOf="@+id/imageView2"
+        app:srcCompat="@drawable/plus" />
+
     <ImageButton
         android:id="@+id/recipeDetailsBackBtn"
         android:layout_width="60dp"
@@ -25,7 +97,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_gravity="center"
-        android:fontFamily="@font/kollektif_bolditalic"
+        android:fontFamily="@font/kollektif_bold"
         android:text="Recipe"
         android:textColor="@color/black"
         android:textSize="50dp"
@@ -34,56 +106,75 @@
         app:layout_constraintTop_toBottomOf="@+id/recipeDetailsBackBtn" />
 
     <TextView
-        android:id="@+id/textView2"
+        android:id="@+id/tvRecipeCreatorName"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_gravity="center"
-        android:fontFamily="@font/kollektif_bolditalic"
+        android:layout_marginTop="10dp"
+        android:fontFamily="@font/kollektif_bold"
         android:text="xyz"
         android:textColor="@color/black"
         android:textSize="20dp"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/linearLayout" />
+        app:layout_constraintHorizontal_bias="0.37"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/tvRecipeDetailsName" />
 
     <Button
-        android:id="@+id/follow"
+        android:id="@+id/followBtn"
         android:layout_width="wrap_content"
         android:layout_height="35dp"
         android:layout_gravity="center"
+        android:layout_marginTop="7dp"
         android:text="follow"
         android:textSize="10sp"
-        app:layout_constraintTop_toBottomOf="@+id/linearLayout" />
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.63"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/tvRecipeDetailsName" />
 
     <TextView
+        android:id="@+id/tvRecipeLikeCounter"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_gravity="center"
-        android:fontFamily="@font/kollektif_bolditalic"
+        android:fontFamily="@font/kollektif_bold"
         android:text="16"
         android:textAlignment="center"
         android:textColor="@color/black"
-        android:textSize="20dp"
+        android:textSize="28sp"
         android:translationZ="90dp"
-        app:layout_constraintBottom_toBottomOf="@+id/textView2"
-        app:layout_constraintEnd_toStartOf="@+id/textView2" />
+        app:layout_constraintBottom_toBottomOf="@+id/imageView2"
+        app:layout_constraintEnd_toEndOf="@+id/imageView2"
+        app:layout_constraintStart_toStartOf="@+id/imageView2"
+        app:layout_constraintTop_toTopOf="@+id/imageView2"
+        app:layout_constraintVertical_bias="0.41000003" />
 
     <ImageView
         android:id="@+id/imageView2"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_gravity="center"
+        android:layout_marginTop="25dp"
         android:src="@drawable/heart"
-        app:layout_constraintTop_toBottomOf="@+id/linearLayout" />
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/followBtn" />
 
     <LinearLayout
         android:id="@+id/linearLayout"
         android:layout_width="match_parent"
         android:layout_height="100dp"
+        android:layout_marginStart="10dp"
+        android:layout_marginTop="135dp"
+        android:layout_marginEnd="10dp"
         android:background="@drawable/button_gradient"
-        app:layout_constraintTop_toBottomOf="@+id/tvRecipeDetailsName">
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/imageView2">
 
         <Button
-            android:id="@+id/addToList"
+            android:id="@+id/addToListBtn"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:layout_gravity="center"
@@ -95,7 +186,6 @@
             android:textColor="@color/black"
             android:textSize="40dp" />
     </LinearLayout>
-
 
 
 </androidx.constraintlayout.widget.ConstraintLayout>

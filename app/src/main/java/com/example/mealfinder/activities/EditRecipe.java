@@ -2,9 +2,11 @@ package com.example.mealfinder.activities;
 
 import android.annotation.SuppressLint;
 import android.content.Intent;
+import android.content.res.Resources;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Matrix;
+import android.graphics.drawable.Drawable;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.Environment;
@@ -16,10 +18,12 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageButton;
+import android.widget.LinearLayout;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.content.FileProvider;
+import androidx.core.content.res.ResourcesCompat;
 
 import com.example.mealfinder.R;
 import com.example.mealfinder.objects.Recipe;
@@ -70,13 +74,19 @@ public class EditRecipe extends AppCompatActivity implements View.OnClickListene
     private static Uri img3downloadUrl;
     private Bitmap bitmap;
     private static int currentIB;
+    private Recipe rec;
+    private boolean isExists;
+    private LinearLayout LLsaveRecipe;
+    private Drawable enabledBG;
+    private Drawable disabledBG;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.edit_recipe);
         Intent i = getIntent();
-        Recipe rec = (Recipe)i.getSerializableExtra("rec");
+        rec = (Recipe)i.getSerializableExtra("rec");
+        isExists = i.getBooleanExtra("isExists", false);
         mAuth = FirebaseAuth.getInstance();
         db = FirebaseDatabase.getInstance();
         stor = FirebaseStorage.getInstance();
@@ -95,6 +105,12 @@ public class EditRecipe extends AppCompatActivity implements View.OnClickListene
         addImageIb2.setOnClickListener(this);
         addImageIb3.setOnClickListener(this);
         saveRecipeBtn.setEnabled(false);
+        Resources res = getResources();
+        enabledBG = ResourcesCompat.getDrawable(res, R.drawable.button_gradient2_enabled, null);
+        disabledBG = ResourcesCompat.getDrawable(res, R.drawable.button_gradient2_disabled, null);
+        LLsaveRecipe = findViewById(R.id.LLsaveRecipe);
+        LLsaveRecipe.setBackground(disabledBG);
+        saveRecipeBtn.setAlpha(0.25f);
         img1downloadUrl = Uri.EMPTY;
         img2downloadUrl = Uri.EMPTY;
         img3downloadUrl = Uri.EMPTY;
@@ -152,10 +168,20 @@ public class EditRecipe extends AppCompatActivity implements View.OnClickListene
         if (v.getId() == R.id.saveRecipeBtn) {
             FirebaseUser currentUser = mAuth.getCurrentUser();
             String[] tags = etRecipeTags.getText().toString().split(",");
-            Recipe recipe = new Recipe(etRecipeName.getText().toString(), username, currentUser.getUid().toString(), etRecipeDesc.getText().toString(), etRecipeInstr.getText().toString(), !img1downloadUrl.equals(Uri.EMPTY) ? img1downloadUrl.toString() : "", !img2downloadUrl.equals(Uri.EMPTY) ? img2downloadUrl.toString() : "", !img3downloadUrl.equals(Uri.EMPTY) ? img3downloadUrl.toString() : "", Arrays.asList(tags));
-            db.getReference().child("recipes").child(recipe.getId()).setValue(recipe);
+            if (isExists) {
+                rec.setName(etRecipeName.getText().toString());
+                rec.setDesc(etRecipeDesc.getText().toString());
+                rec.setSteps(etRecipeInstr.getText().toString());
+                rec.setTags(Arrays.asList(tags));
+                rec.setImg1(!img1downloadUrl.equals(Uri.EMPTY) ? img1downloadUrl.toString() : rec.getImg1());
+                rec.setImg2(!img2downloadUrl.equals(Uri.EMPTY) ? img2downloadUrl.toString() : rec.getImg2());
+                rec.setImg3(!img3downloadUrl.equals(Uri.EMPTY) ? img3downloadUrl.toString() : rec.getImg3());
+            } else {
+                rec = new Recipe(etRecipeName.getText().toString(), username, currentUser.getUid().toString(), etRecipeDesc.getText().toString(), etRecipeInstr.getText().toString(), !img1downloadUrl.equals(Uri.EMPTY) ? img1downloadUrl.toString() : "", !img2downloadUrl.equals(Uri.EMPTY) ? img2downloadUrl.toString() : "", !img3downloadUrl.equals(Uri.EMPTY) ? img3downloadUrl.toString() : "", Arrays.asList(tags));
+            }
+            db.getReference().child("recipes").child(rec.getId()).setValue(rec);
             Intent i = new Intent(this, RecipeDetails.class);
-            i.putExtra("rec", recipe);
+            i.putExtra("rec", rec);
             startActivity(i);
         }
 
@@ -321,6 +347,8 @@ public class EditRecipe extends AppCompatActivity implements View.OnClickListene
                         default:
                     }
                     saveRecipeBtn.setEnabled(true);
+                    LLsaveRecipe.setBackground(enabledBG);
+                    saveRecipeBtn.setAlpha(1f);
                 }
             }
         });
@@ -360,6 +388,8 @@ public class EditRecipe extends AppCompatActivity implements View.OnClickListene
                         default:
                     }
                     saveRecipeBtn.setEnabled(true);
+                    LLsaveRecipe.setBackground(enabledBG);
+                    saveRecipeBtn.setAlpha(1f);
                 }
             }
         });

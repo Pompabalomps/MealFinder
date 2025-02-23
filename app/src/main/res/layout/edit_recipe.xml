@@ -110,11 +110,12 @@
         app:layout_constraintTop_toBottomOf="@+id/etRecipeInstr" />
 
     <LinearLayout
+        android:id="@+id/LLsaveRecipe"
         android:layout_width="170dp"
         android:layout_height="50dp"
         android:layout_gravity="center"
         android:layout_marginTop="20dp"
-        android:background="@drawable/button_gradient2"
+        android:background="@drawable/button_gradient2_enabled"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/addImageIb2">
