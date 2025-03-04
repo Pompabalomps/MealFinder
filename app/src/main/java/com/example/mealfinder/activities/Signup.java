@@ -17,7 +17,6 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageButton;
-import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.example.mealfinder.R;
@@ -92,9 +91,6 @@ public class Signup extends AppCompatActivity implements View.OnClickListener {
             }
         } else if (v.getId() == R.id.signupBackBtn) {
             finish();
-        } else if (v.getId() == R.id.takePhotoBtn) {
-            Log.d(TAG, "taking picture");
-            dispatchTakePictureIntent();
         }
 
 
@@ -144,78 +140,6 @@ public class Signup extends AppCompatActivity implements View.OnClickListener {
             Log.d(TAG, "Sign Up FAILURE");
             tvFail.setText("Sign up failed");
         }
-    }
-
-    @SuppressLint("MissingSuperCall")
-    @Override
-    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-        if (requestCode == REQUEST_TAKE_PHOTO && resultCode == RESULT_OK) {
-            setPic();
-        }
-    }
-
-    private void setPic() {
-        int targetW = takePhotoIb.getWidth();
-        int targetH = takePhotoIb.getHeight();
-
-        BitmapFactory.Options bmOptions = new BitmapFactory.Options();
-        bmOptions.inJustDecodeBounds = true;
-
-        BitmapFactory.decodeFile(currentPhotoPath, bmOptions);
-
-        int photoW = bmOptions.outWidth;
-        int photoH = bmOptions.outHeight;
-
-        int scaleFactor = Math.max(1, Math.min(photoW/targetW, photoH/targetH));
-
-        bmOptions.inJustDecodeBounds = false;
-        bmOptions.inSampleSize = scaleFactor;
-
-        bitmap = BitmapFactory.decodeFile(currentPhotoPath, bmOptions);
-        takePhotoIb.setImageBitmap(bitmap);
-        takePhotoIb.setRotation(90);
-    }
-
-
-    private void dispatchTakePictureIntent() {
-        Intent takePictureIntent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
-        // Ensure that there's a camera activity to handle the intent
-        Log.d(TAG, "taking picture 1");
-        if (takePictureIntent.resolveActivity(getPackageManager()) != null) {
-            Log.d(TAG, "taking picture 2");
-            // Create the File where the photo should go
-            File photoFile = null;
-            try {
-                photoFile = createImageFile();
-            } catch (IOException ex) {
-                // Error occurred while creating the File
-
-            }
-            // Continue only if the File was successfully created
-            if (photoFile != null) {
-                Uri photoURI = FileProvider.getUriForFile(this,
-                        "com.example.mealfinder.activities.fileprovider",
-                        photoFile);
-                takePictureIntent.putExtra(MediaStore.EXTRA_OUTPUT, photoURI);
-                startActivityForResult(takePictureIntent, REQUEST_TAKE_PHOTO);
-            }
-        }
-    }
-
-    private File createImageFile() throws IOException {
-        // Create an image file name
-        String timeStamp = new SimpleDateFormat("yyyyMMdd_HHmmss").format(new Date());
-        String imageFileName = "JPEG_" + timeStamp + "_";
-        File storageDir = getExternalFilesDir(Environment.DIRECTORY_PICTURES);
-        File image = File.createTempFile(
-                imageFileName,  /* prefix */
-                ".jpg",         /* suffix */
-                storageDir      /* directory */
-        );
-
-        // Save a file: path for use with ACTION_VIEW intents
-        currentPhotoPath = image.getAbsolutePath();
-        return image;
     }
 
     private void reload() {

@@ -56,4 +56,7 @@ dependencies {
 
     implementation "androidx.camera:camera-view:${camerax_version}"
     implementation "androidx.camera:camera-extensions:${camerax_version}"
+
+    testImplementation files("/Users/alonzilberman/Library/Android/sdk/platforms/android-33/android.jar")
+
 }

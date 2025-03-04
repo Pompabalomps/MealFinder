@@ -2,10 +2,19 @@ package com.example.mealfinder.activities;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.content.ContextCompat;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
+import androidx.work.Data;
+import androidx.work.ExistingPeriodicWorkPolicy;
+import androidx.work.OneTimeWorkRequest;
+import androidx.work.PeriodicWorkRequest;
+import androidx.work.WorkManager;
 
+import android.Manifest;
 import android.content.Intent;
+import android.content.pm.PackageManager;
+import android.os.Build;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
@@ -17,6 +26,7 @@ import android.widget.Toast;
 import com.example.mealfinder.R;
 import com.example.mealfinder.adapters.*;
 import com.example.mealfinder.objects.*;
+import com.example.mealfinder.workers.MyWorker;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.FirebaseAuth;
@@ -29,7 +39,9 @@ import com.google.firebase.database.ValueEventListener;
 import java.io.File;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Calendar;
 import java.util.Map;
+import java.util.concurrent.TimeUnit;
 
 public class Main extends AppCompatActivity implements View.OnClickListener {
 
@@ -43,6 +55,7 @@ public class Main extends AppCompatActivity implements View.OnClickListener {
     private Button moreMainBtn;
     private ArrayList<Recipe> recipes;
     private View.OnClickListener onItemClickListener;
+    private Calendar calendar;
 
 
     @Override
@@ -55,6 +68,7 @@ public class Main extends AppCompatActivity implements View.OnClickListener {
         ibMainProfile = findViewById(R.id.ibMainProfile);
         mainFyBtn = findViewById(R.id.mainFyBtn);
         moreMainBtn = findViewById(R.id.moreMainBtn);
+        calendar = Calendar.getInstance();
         ibMainSearch.setOnClickListener(this);
         ibMainProfile.setOnClickListener(this);
         mainFyBtn.setOnClickListener(this);
@@ -103,6 +117,74 @@ public class Main extends AppCompatActivity implements View.OnClickListener {
             }
         });
         Log.d(TAG, "finished loading recycler view");
+
+        calendar.setTimeInMillis(System.currentTimeMillis());
+        calendar.set(Calendar.HOUR_OF_DAY, 7);
+        calendar.set(Calendar.MINUTE, 8);
+
+
+        // if alarm time has already passed, increment day by 1
+        if (calendar.getTimeInMillis() <= System.currentTimeMillis()) {
+            calendar.set(Calendar.DAY_OF_MONTH, calendar.get(Calendar.DAY_OF_MONTH) + 1);
+        }
+
+        if (Build.VERSION.SDK_INT >= 33) {
+            if (ContextCompat.checkSelfPermission(this, Manifest.permission.POST_NOTIFICATIONS) == PackageManager.PERMISSION_GRANTED) {
+                PeriodicWorkRequest myWorkRequest =
+                        new PeriodicWorkRequest.Builder(MyWorker.class, 1, TimeUnit.DAYS)
+                                .setInitialDelay(calendar.getTimeInMillis() - System.currentTimeMillis(), TimeUnit.MILLISECONDS)
+                                .addTag("mywork")
+                                .setInputData(new Data.Builder().putString("userID","yosi"/*mAuth.getUid()*/).build())
+                                // Constraints
+                                .build();
+
+                // one time work
+            /*WorkRequest uploadWorkRequest =
+                    new OneTimeWorkRequest.Builder(MyWorker.class)
+                            .build();*/
+
+                WorkManager.getInstance(this).enqueueUniquePeriodicWork(
+                        "sendLogs",
+                        ExistingPeriodicWorkPolicy.REPLACE,
+                        myWorkRequest);
+            }
+
+        }
+        else
+        {
+            FirebaseUser currentUser = mAuth.getCurrentUser();
+
+            final String[] username = new String[1];
+            db.getReference().child("users").child(currentUser.getUid()).get().addOnCompleteListener(new OnCompleteListener<DataSnapshot>() {
+                @Override
+                public void onComplete(@NonNull Task<DataSnapshot> task) {
+                    if (!task.isSuccessful()) {
+                        Log.e("firebase", "Error getting data", task.getException());
+                    }
+                    else {
+                        username[0] = ((Map<String, Object>)task.getResult().getValue()).get("username").toString();
+                        Log.d(TAG, "username = " + username[0]);
+                        PeriodicWorkRequest myWorkRequest =
+                                new PeriodicWorkRequest.Builder(MyWorker.class, 15, TimeUnit.MINUTES)
+                                        .setInitialDelay(10000, TimeUnit.MILLISECONDS)
+                                        .addTag("mywork")
+                                        .setInputData(new Data.Builder().putString("username",username[0]).build())
+                                        // Constraints
+                                        .build();
+
+                        // one time work
+            /*WorkRequest uploadWorkRequest =
+                    new OneTimeWorkRequest.Builder(MyWorker.class)
+                            .build();*/
+
+                        WorkManager.getInstance(Main.this).enqueueUniquePeriodicWork(
+                                "sendLogs",
+                                ExistingPeriodicWorkPolicy.REPLACE,
+                                myWorkRequest);
+                    }
+                }
+            });
+        }
     }
 
     @Override

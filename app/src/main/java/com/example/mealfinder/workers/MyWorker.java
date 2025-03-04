@@ -16,8 +16,6 @@ import androidx.work.WorkerParameters;
 
 import com.example.mealfinder.R;
 
-import javax.xml.transform.Result;
-
 public class MyWorker extends Worker {
     public static final String CHANNEL_ID = "WORKER_CHANNEL";
 
@@ -30,15 +28,15 @@ public class MyWorker extends Worker {
     @Override
     public Result doWork() {
 
-        String userId = getInputData().getString("userID");
+        String username = getInputData().getString("username");
 
 
         // Do the work here--in this case, upload the images.
         createNotificationChannel();
         NotificationCompat.Builder builder = new NotificationCompat.Builder( super.getApplicationContext(), CHANNEL_ID)
                 .setSmallIcon(R.drawable.ic_launcher_foreground)
-                .setContentTitle("hello")
-                .setContentText(userId + "have a nice day")
+                .setContentTitle("What's up " + username + "!")
+                .setContentText("Come check out some new recipes!")
                 .setPriority(NotificationCompat.PRIORITY_DEFAULT);
 
         NotificationManagerCompat notificationManager = NotificationManagerCompat.from(getApplicationContext());
