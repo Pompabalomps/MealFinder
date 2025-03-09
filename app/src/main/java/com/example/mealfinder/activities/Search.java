@@ -6,11 +6,13 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageButton;
+import android.widget.ImageView;
 
 import com.example.mealfinder.R;
 import com.example.mealfinder.adapters.RecentsAdapter;
@@ -34,6 +36,9 @@ public class Search extends AppCompatActivity implements View.OnClickListener {
     private ArrayList<SearchQuery> recents;
     private ImageButton ibSearchBtn;
     private EditText etSearch;
+    private ImageView ivRecents;
+    private View.OnClickListener onItemClickListener;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -45,11 +50,24 @@ public class Search extends AppCompatActivity implements View.OnClickListener {
         rvSearch = findViewById(R.id.rvSearch);
         ibSearchBtn = findViewById(R.id.ibSearchBtn);
         etSearch = findViewById(R.id.etSearch);
+        ivRecents = findViewById(R.id.ivRecents);
         searchBackBtn.setOnClickListener(this);
         ibSearchBtn.setOnClickListener(this);
 
+        ivRecents.setVisibility(View.GONE);
+
         RecyclerView.LayoutManager layoutManager = new LinearLayoutManager(this);
         rvSearch.setLayoutManager(layoutManager);
+
+        onItemClickListener = new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                RecyclerView.ViewHolder viewHolder = (RecyclerView.ViewHolder) view.getTag();
+                int position = viewHolder.getAdapterPosition();
+                SearchQuery recent = recents.get(position);
+                etSearch.setText(recent.getQuery());
+            }
+        };
 
         db.getReference().child("recents").addValueEventListener(new ValueEventListener() {
             @Override
@@ -61,9 +79,14 @@ public class Search extends AppCompatActivity implements View.OnClickListener {
                         recents.add(query);
                     }
                 }
-                RecentsAdapter recipeAdapter = new RecentsAdapter(recents);
-                rvSearch.setAdapter(recipeAdapter);
-//                recipeAdapter.setmOnItemClickListener(onItemClickListener);
+
+                if (!recents.isEmpty()) {
+                    ivRecents.setVisibility(View.VISIBLE);
+                }
+
+                RecentsAdapter recentsAdapter = new RecentsAdapter(recents);
+                rvSearch.setAdapter(recentsAdapter);
+                recentsAdapter.setmOnItemClickListener(onItemClickListener);
             }
 
             @Override
@@ -103,5 +126,18 @@ public class Search extends AppCompatActivity implements View.OnClickListener {
             db.getReference().child("recents").child(query.getSearchId()).setValue(query);
             etSearch.setText("");
         }
+    }
+
+    @Override
+    protected void onPause() {
+        super.onPause();
+
+        // Storing data in SharedPreferences
+        SharedPreferences sharedPreferences = getSharedPreferences("UserPreferences", MODE_PRIVATE);
+        SharedPreferences.Editor editor = sharedPreferences.edit();
+
+        editor.putLong("lastLogout", System.currentTimeMillis());
+
+        editor.apply();
     }
 }

@@ -13,6 +13,7 @@ import androidx.work.WorkManager;
 
 import android.Manifest;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.os.Build;
 import android.os.Bundle;
@@ -131,7 +132,7 @@ public class Main extends AppCompatActivity implements View.OnClickListener {
         if (Build.VERSION.SDK_INT >= 33) {
             if (ContextCompat.checkSelfPermission(this, Manifest.permission.POST_NOTIFICATIONS) == PackageManager.PERMISSION_GRANTED) {
                 PeriodicWorkRequest myWorkRequest =
-                        new PeriodicWorkRequest.Builder(MyWorker.class, 1, TimeUnit.DAYS)
+                        new PeriodicWorkRequest.Builder(MyWorker.class, 15, TimeUnit.MINUTES)
                                 .setInitialDelay(calendar.getTimeInMillis() - System.currentTimeMillis(), TimeUnit.MILLISECONDS)
                                 .addTag("mywork")
                                 .setInputData(new Data.Builder().putString("userID","yosi"/*mAuth.getUid()*/).build())
@@ -224,5 +225,18 @@ public class Main extends AppCompatActivity implements View.OnClickListener {
 
     private void reload(FirebaseUser user) {
         return;
+    }
+
+    @Override
+    protected void onPause() {
+        super.onPause();
+
+        // Storing data in SharedPreferences
+        SharedPreferences sharedPreferences = getSharedPreferences("UserPreferences", MODE_PRIVATE);
+        SharedPreferences.Editor editor = sharedPreferences.edit();
+
+        editor.putLong("lastLogout", System.currentTimeMillis());
+
+        editor.apply();
     }
 }

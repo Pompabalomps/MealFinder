@@ -3,6 +3,7 @@ package com.example.mealfinder.activities;
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.os.Bundle;
@@ -155,5 +156,18 @@ public class RecipeDetails extends AppCompatActivity implements View.OnClickList
         bitmap = BitmapFactory.decodeFile(photoPath, bmOptions);
 //        takePhotoIv.setRotation(90);
         takePhotoIv.setImageBitmap(bitmap);
+    }
+
+    @Override
+    protected void onPause() {
+        super.onPause();
+
+        // Storing data in SharedPreferences
+        SharedPreferences sharedPreferences = getSharedPreferences("UserPreferences", MODE_PRIVATE);
+        SharedPreferences.Editor editor = sharedPreferences.edit();
+
+        editor.putLong("lastLogout", System.currentTimeMillis());
+
+        editor.apply();
     }
 }

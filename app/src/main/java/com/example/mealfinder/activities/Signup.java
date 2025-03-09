@@ -6,6 +6,7 @@ import androidx.core.content.FileProvider;
 
 import android.annotation.SuppressLint;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.net.Uri;
@@ -133,7 +134,13 @@ public class Signup extends AppCompatActivity implements View.OnClickListener {
             Log.d(TAG, "Sign Up SUCCESS");
             String username = etSignupUsername.getText().toString();
             User u = new User(user.getUid(), username, user.getEmail(), 0, new Date());
-            db.getReference().child("users").child(user.getUid()).setValue(u);
+            db.getReference().child("users").child(user.getUid()).setValue(u).addOnCompleteListener(task -> {
+                if (task.isSuccessful()) {
+                    Log.d(TAG, "User data successfully added to database");
+                } else {
+                    Log.e(TAG, "Error adding user data", task.getException());
+                }
+            });
             Intent i = new Intent(this, Login.class);
             startActivity(i);
         } else {

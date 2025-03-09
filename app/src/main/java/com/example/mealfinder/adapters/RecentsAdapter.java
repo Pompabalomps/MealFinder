@@ -17,8 +17,15 @@ import java.util.ArrayList;
 public class RecentsAdapter extends RecyclerView.Adapter<RecentsAdapter.RecentViewHolder> {
     private ArrayList<SearchQuery> recents;
 
+    private View.OnClickListener mOnItemClickListener;
+
+
     public RecentsAdapter(ArrayList<SearchQuery> recents) {
         this.recents = recents;
+    }
+
+    public void setmOnItemClickListener(View.OnClickListener itemClickListener) {
+        this.mOnItemClickListener = itemClickListener;
     }
 
     @NonNull
@@ -39,12 +46,14 @@ public class RecentsAdapter extends RecyclerView.Adapter<RecentsAdapter.RecentVi
         return recents.size();
     }
 
-    public static class RecentViewHolder extends RecyclerView.ViewHolder {
+    public class RecentViewHolder extends RecyclerView.ViewHolder {
         public TextView tvRecentName;
-
         public RecentViewHolder(@NonNull View itemView) {
             super(itemView);
             tvRecentName = itemView.findViewById(R.id.tvRecentName);
+
+            itemView.setTag(this);
+            itemView.setOnClickListener(mOnItemClickListener);
         }
     }
 }
