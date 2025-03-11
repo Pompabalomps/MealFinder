@@ -60,7 +60,8 @@ public class RecipeList extends AppCompatActivity implements View.OnClickListene
         }
 
         if (v.getId() == R.id.listBackBtn) {
-            finish();
+            Intent i = new Intent(this, Main.class);
+            startActivity(i);
         }
     }
 
@@ -73,6 +74,19 @@ public class RecipeList extends AppCompatActivity implements View.OnClickListene
         SharedPreferences.Editor editor = sharedPreferences.edit();
 
         editor.putLong("lastLogout", System.currentTimeMillis());
+        editor.putBoolean("isAppOn", false);
+
+        editor.apply();
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+
+        SharedPreferences sharedPreferences = getSharedPreferences("UserPreferences", MODE_PRIVATE);
+        SharedPreferences.Editor editor = sharedPreferences.edit();
+
+        editor.putBoolean("isAppOn", true);
 
         editor.apply();
     }

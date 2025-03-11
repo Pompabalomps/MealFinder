@@ -42,6 +42,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Calendar;
 import java.util.Map;
+import java.util.Random;
 import java.util.concurrent.TimeUnit;
 
 public class Main extends AppCompatActivity implements View.OnClickListener {
@@ -88,8 +89,6 @@ public class Main extends AppCompatActivity implements View.OnClickListener {
                 int position = viewHolder.getAdapterPosition();
                 Recipe recipe = recipes.get(position);
                 i.putExtra("rec", recipe);
-//                i.putExtra("rec", recipe);
-//                i.putExtra("isExists", true);
                 startActivity(i);
             }
         };
@@ -119,73 +118,33 @@ public class Main extends AppCompatActivity implements View.OnClickListener {
         });
         Log.d(TAG, "finished loading recycler view");
 
-        calendar.setTimeInMillis(System.currentTimeMillis());
-        calendar.set(Calendar.HOUR_OF_DAY, 7);
-        calendar.set(Calendar.MINUTE, 8);
+        FirebaseUser currentUser = mAuth.getCurrentUser();
 
-
-        // if alarm time has already passed, increment day by 1
-        if (calendar.getTimeInMillis() <= System.currentTimeMillis()) {
-            calendar.set(Calendar.DAY_OF_MONTH, calendar.get(Calendar.DAY_OF_MONTH) + 1);
-        }
-
-        if (Build.VERSION.SDK_INT >= 33) {
-            if (ContextCompat.checkSelfPermission(this, Manifest.permission.POST_NOTIFICATIONS) == PackageManager.PERMISSION_GRANTED) {
-                PeriodicWorkRequest myWorkRequest =
-                        new PeriodicWorkRequest.Builder(MyWorker.class, 15, TimeUnit.MINUTES)
-                                .setInitialDelay(calendar.getTimeInMillis() - System.currentTimeMillis(), TimeUnit.MILLISECONDS)
-                                .addTag("mywork")
-                                .setInputData(new Data.Builder().putString("userID","yosi"/*mAuth.getUid()*/).build())
-                                // Constraints
-                                .build();
-
-                // one time work
-            /*WorkRequest uploadWorkRequest =
-                    new OneTimeWorkRequest.Builder(MyWorker.class)
-                            .build();*/
-
-                WorkManager.getInstance(this).enqueueUniquePeriodicWork(
-                        "sendLogs",
-                        ExistingPeriodicWorkPolicy.REPLACE,
-                        myWorkRequest);
-            }
-
-        }
-        else
-        {
-            FirebaseUser currentUser = mAuth.getCurrentUser();
-
-            final String[] username = new String[1];
-            db.getReference().child("users").child(currentUser.getUid()).get().addOnCompleteListener(new OnCompleteListener<DataSnapshot>() {
-                @Override
-                public void onComplete(@NonNull Task<DataSnapshot> task) {
-                    if (!task.isSuccessful()) {
-                        Log.e("firebase", "Error getting data", task.getException());
-                    }
-                    else {
-                        username[0] = ((Map<String, Object>)task.getResult().getValue()).get("username").toString();
-                        Log.d(TAG, "username = " + username[0]);
-                        PeriodicWorkRequest myWorkRequest =
-                                new PeriodicWorkRequest.Builder(MyWorker.class, 15, TimeUnit.MINUTES)
-                                        .setInitialDelay(10000, TimeUnit.MILLISECONDS)
-                                        .addTag("mywork")
-                                        .setInputData(new Data.Builder().putString("username",username[0]).build())
-                                        // Constraints
-                                        .build();
-
-                        // one time work
-            /*WorkRequest uploadWorkRequest =
-                    new OneTimeWorkRequest.Builder(MyWorker.class)
-                            .build();*/
-
-                        WorkManager.getInstance(Main.this).enqueueUniquePeriodicWork(
-                                "sendLogs",
-                                ExistingPeriodicWorkPolicy.REPLACE,
-                                myWorkRequest);
-                    }
+        final String[] username = new String[1];
+        db.getReference().child("users").child(currentUser.getUid()).get().addOnCompleteListener(new OnCompleteListener<DataSnapshot>() {
+            @Override
+            public void onComplete(@NonNull Task<DataSnapshot> task) {
+                if (!task.isSuccessful()) {
+                    Log.e("firebase", "Error getting data", task.getException());
                 }
-            });
-        }
+                else {
+                    username[0] = ((Map<String, Object>)task.getResult().getValue()).get("username").toString();
+                    Log.d(TAG, "username = " + username[0]);
+                    PeriodicWorkRequest myWorkRequest =
+                            new PeriodicWorkRequest.Builder(MyWorker.class, 1, TimeUnit.DAYS)
+                                    .setInitialDelay(15000, TimeUnit.MILLISECONDS)
+                                    .addTag("mywork")
+                                    .setInputData(new Data.Builder().putString("username",username[0]).build())
+                                    // Constraints
+                                    .build();
+
+                    WorkManager.getInstance(Main.this).enqueueUniquePeriodicWork(
+                            "sendLogs",
+                            ExistingPeriodicWorkPolicy.REPLACE,
+                            myWorkRequest);
+                }
+            }
+        });
     }
 
     @Override
@@ -213,8 +172,46 @@ public class Main extends AppCompatActivity implements View.OnClickListener {
         }
 
         if (v.getId() == R.id.mainFyBtn) {
-            Intent i = new Intent(this, ForYou.class);
-            startActivity(i);
+            db.getReference().child("users").child(mAuth.getCurrentUser().getUid()).child("savedRecipes").addValueEventListener(new ValueEventListener() {
+                @Override
+                public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                    ArrayList<String> savedRecipes = new ArrayList<>();
+                    for (DataSnapshot recipeSnapshot : dataSnapshot.getChildren()) {
+                        savedRecipes.add(recipeSnapshot.getValue(String.class));
+                    }
+                    db.getReference().child("recipes").addValueEventListener(new ValueEventListener() {
+                        @Override
+                        public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                            recipes = new ArrayList<>();
+                            for (DataSnapshot recipeSnapshot : dataSnapshot.getChildren()) {
+                                Recipe rec = recipeSnapshot.getValue(Recipe.class);
+                                if (!rec.getUserId().equals(mAuth.getCurrentUser().getUid()) && !savedRecipes.contains(rec.getId())) {
+                                    recipes.add(rec);
+                                }
+                            }
+                            if (recipes.isEmpty()) {
+                                Toast.makeText(Main.this, "No new recipes to show!", Toast.LENGTH_SHORT).show();
+                            } else {
+                                Intent i = new Intent(Main.this, ForYou.class);
+                                i.putExtra("rec", getRandom(recipes));
+                                startActivity(i);
+                            }
+                        }
+
+                        @Override
+                        public void onCancelled(@NonNull DatabaseError error) {
+
+                        }
+                    });
+                }
+
+                @Override
+                public void onCancelled(@NonNull DatabaseError error) {
+
+                }
+            });
+
+
         }
 
         if (v.getId() == R.id.moreMainBtn) {
@@ -235,8 +232,24 @@ public class Main extends AppCompatActivity implements View.OnClickListener {
         SharedPreferences sharedPreferences = getSharedPreferences("UserPreferences", MODE_PRIVATE);
         SharedPreferences.Editor editor = sharedPreferences.edit();
 
-        editor.putLong("lastLogout", System.currentTimeMillis());
+        editor.putLong("lastLogout", System.currentTimeMillis()).commit();
+        editor.putBoolean("isAppOn", false).commit();
+        Log.d(TAG, "isAppOn = false");
+    }
 
-        editor.apply();
+    @Override
+    protected void onResume() {
+        super.onResume();
+
+        SharedPreferences sharedPreferences = getSharedPreferences("UserPreferences", MODE_PRIVATE);
+        SharedPreferences.Editor editor = sharedPreferences.edit();
+
+        editor.putBoolean("isAppOn", true).commit();
+        Log.d(TAG, "isAppOn = true");
+    }
+
+    public static Recipe getRandom(ArrayList<Recipe> array) {
+        int rnd = new Random().nextInt(array.size());
+        return array.get(rnd);
     }
 }

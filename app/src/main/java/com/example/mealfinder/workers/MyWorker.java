@@ -22,7 +22,7 @@ import com.example.mealfinder.R;
 public class MyWorker extends Worker {
     public static final String CHANNEL_ID = "WORKER_CHANNEL";
     private Context mContext;
-    private static Long WEEK = L;
+    private static Long WEEK = 604800000L;
 
     public MyWorker(
             @NonNull Context context,
@@ -38,8 +38,9 @@ public class MyWorker extends Worker {
 
         SharedPreferences sharedPreferences = this.mContext.getSharedPreferences("UserPreferences", MODE_PRIVATE);
         Long lastLogout = sharedPreferences.getLong("lastLogout", System.currentTimeMillis());
+        boolean isAppOn = sharedPreferences.getBoolean("isAppOn",true);
 
-        if (System.currentTimeMillis() - lastLogout > WEEK) {
+        if (System.currentTimeMillis() - lastLogout > 10000 && !isAppOn) {
             createNotificationChannel();
             NotificationCompat.Builder builder = new NotificationCompat.Builder( super.getApplicationContext(), CHANNEL_ID)
                     .setSmallIcon(R.drawable.ic_launcher_foreground)

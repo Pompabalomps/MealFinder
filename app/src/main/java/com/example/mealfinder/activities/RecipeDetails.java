@@ -132,7 +132,8 @@ public class RecipeDetails extends AppCompatActivity implements View.OnClickList
             startActivity(i);
         }
         if (v.getId() == R.id.recipeDetailsBackBtn) {
-            finish();
+            Intent i = new Intent(this, Main.class);
+            startActivity(i);
         }
     }
 
@@ -167,6 +168,19 @@ public class RecipeDetails extends AppCompatActivity implements View.OnClickList
         SharedPreferences.Editor editor = sharedPreferences.edit();
 
         editor.putLong("lastLogout", System.currentTimeMillis());
+        editor.putBoolean("isAppOn", false);
+
+        editor.apply();
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+
+        SharedPreferences sharedPreferences = getSharedPreferences("UserPreferences", MODE_PRIVATE);
+        SharedPreferences.Editor editor = sharedPreferences.edit();
+
+        editor.putBoolean("isAppOn", true);
 
         editor.apply();
     }

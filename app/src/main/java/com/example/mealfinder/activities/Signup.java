@@ -51,7 +51,6 @@ public class Signup extends AppCompatActivity implements View.OnClickListener {
     private static final int REQUEST_TAKE_PHOTO = 1;
     private String currentPhotoPath;
     private Bitmap bitmap;
-    private ImageButton takePhotoIb;
 //    private ImageView ivPhoto;
 
     @Override
@@ -68,11 +67,9 @@ public class Signup extends AppCompatActivity implements View.OnClickListener {
         etSignupUsername = findViewById(R.id.etSignupUsername);
         etSignupPassword = findViewById(R.id.etSignupPassword);
         etSignupPassword2 = findViewById(R.id.etSignupPassword2);
-        takePhotoIb = findViewById(R.id.takePhotoBtn);
 //        ivPhoto = findViewById(R.id.ivPhoto);
         signupBtn.setOnClickListener(this);
         backBtn.setOnClickListener(this);
-        takePhotoIb.setOnClickListener(this);
     }
 
     @Override

@@ -119,7 +119,8 @@ public class Search extends AppCompatActivity implements View.OnClickListener {
     @Override
     public void onClick(View v) {
         if (v.getId() == R.id.searchBackBtn) {
-            finish();
+            Intent i = new Intent(this, Main.class);
+            startActivity(i);
         }
         if (v.getId() == R.id.ibSearchBtn) {
             SearchQuery query = new SearchQuery(etSearch.getText().toString(), mAuth.getCurrentUser().getUid());
@@ -137,6 +138,19 @@ public class Search extends AppCompatActivity implements View.OnClickListener {
         SharedPreferences.Editor editor = sharedPreferences.edit();
 
         editor.putLong("lastLogout", System.currentTimeMillis());
+        editor.putBoolean("isAppOn", false);
+
+        editor.apply();
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+
+        SharedPreferences sharedPreferences = getSharedPreferences("UserPreferences", MODE_PRIVATE);
+        SharedPreferences.Editor editor = sharedPreferences.edit();
+
+        editor.putBoolean("isAppOn", true);
 
         editor.apply();
     }
