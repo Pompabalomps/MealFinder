@@ -23,7 +23,9 @@ import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
 import com.google.firebase.storage.UploadTask;
@@ -42,6 +44,8 @@ public class Profile extends AppCompatActivity implements View.OnClickListener {
     private FirebaseDatabase db;
     private FirebaseStorage stor;
     private RecyclerView rvProfile;
+    private View.OnClickListener onItemClickListener;
+    private ArrayList<Recipe> recipes;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -57,15 +61,45 @@ public class Profile extends AppCompatActivity implements View.OnClickListener {
         profileBackBtn.setOnClickListener(this);
         logoutProfileBtn.setOnClickListener(this);
 
-        ArrayList<Recipe> recipes = new ArrayList<>();
-        recipes.add(new Recipe("Hamburger", "Alon", "1234", "Meat patty between two breads", "cook the meat patty then add between breads", null, null, null, Arrays.asList(new String[]{"burger", "meat", "tasty"})));
-        recipes.add(new Recipe("Lasagna", "Alon", "1234", "Pasta cake", "cook the lasagna sheets in water about halfway through to done and then layer in the oven with pasta sauce and cheese", null, null, null, Arrays.asList(new String[]{"lasagna", "pasta", "OMG"})));
+        Intent i = new Intent(this, RecipeDetails.class);
+        onItemClickListener = new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                RecyclerView.ViewHolder viewHolder = (RecyclerView.ViewHolder) view.getTag();
+                int position = viewHolder.getAdapterPosition();
+                Recipe recipe = recipes.get(position);
+                i.putExtra("rec", recipe);
+                startActivity(i);
+            }
+        };
 
+        rvProfile = findViewById(R.id.rvProfile);
         RecyclerView.LayoutManager layoutManager = new LinearLayoutManager(this);
         rvProfile.setLayoutManager(layoutManager);
 
-        ProfileRecipeAdapter profileRecipeAdapter = new ProfileRecipeAdapter(recipes);
-        rvProfile.setAdapter(profileRecipeAdapter);
+
+
+        db.getReference().child("recipes").addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                recipes = new ArrayList<>();
+                for (DataSnapshot recipeSnapshot : dataSnapshot.getChildren()) {
+                    Recipe rec = recipeSnapshot.getValue(Recipe.class);
+                    if (rec.getUserId().equals(mAuth.getCurrentUser().getUid())) {
+                        recipes.add(rec);
+                    }
+                }
+                RecipeAdapter recipeAdapter = new RecipeAdapter(recipes);
+                rvProfile.setAdapter(recipeAdapter);
+                recipeAdapter.setmOnItemClickListener(onItemClickListener);
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError error) {
+
+            }
+        });
+        Log.d(TAG, "finished loading recycler view");
     }
 
     @Override
