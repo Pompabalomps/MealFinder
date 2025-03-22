@@ -28,6 +28,7 @@ import com.google.firebase.database.ValueEventListener;
 
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collections;
 
 public class Search extends AppCompatActivity implements View.OnClickListener {
     private FirebaseAuth mAuth;
@@ -90,6 +91,8 @@ public class Search extends AppCompatActivity implements View.OnClickListener {
                     ivRecents.setVisibility(View.VISIBLE);
                 }
 
+                Collections.reverse(recents);
+
                 RecentsAdapter recentsAdapter = new RecentsAdapter(recents);
                 rvSearch.setAdapter(recentsAdapter);
                 recentsAdapter.setmOnItemClickListener(onItemClickListener);
@@ -142,9 +145,21 @@ public class Search extends AppCompatActivity implements View.OnClickListener {
                             recipes.add(r);
                         }
                     }
+                    Intent i = new Intent(Search.this, RecipeDetails.class);
+                    View.OnClickListener onItemClickListener2 = new View.OnClickListener() {
+                        @Override
+                        public void onClick(View view) {
+                            RecyclerView.ViewHolder viewHolder = (RecyclerView.ViewHolder) view.getTag();
+                            int position = viewHolder.getAdapterPosition();
+                            Recipe recipe = recipes.get(position);
+                            i.putExtra("rec", recipe);
+                            startActivity(i);
+                        }
+                    };
+
                     RecipeAdapter recipeAdapter = new RecipeAdapter(recipes);
                     rvResults.setAdapter(recipeAdapter);
-                    recipeAdapter.setmOnItemClickListener(onItemClickListener);
+                    recipeAdapter.setmOnItemClickListener(onItemClickListener2);
                     rvSearch.setVisibility(View.GONE);
                     ivRecents.setVisibility(View.GONE);
                     rvResults.setVisibility(View.VISIBLE);

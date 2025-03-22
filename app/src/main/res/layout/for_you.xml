@@ -38,8 +38,8 @@
 
     <ImageView
         android:id="@+id/ivFyRecImg1_1"
-        android:layout_width="100dp"
-        android:layout_height="100dp"
+        android:layout_width="200dp"
+        android:layout_height="200dp"
         android:layout_marginTop="30dp"
         android:background="@drawable/blankbg"
         android:scaleType="fitCenter"
@@ -86,8 +86,8 @@
 
     <ImageView
         android:id="@+id/ivFyRecImg2_1"
-        android:layout_width="100dp"
-        android:layout_height="100dp"
+        android:layout_width="160dp"
+        android:layout_height="160dp"
         android:layout_marginTop="30dp"
         android:background="@drawable/blankbg"
         android:scaleType="fitCenter"
@@ -98,8 +98,8 @@
 
     <ImageView
         android:id="@+id/ivFyRecImg2_2"
-        android:layout_width="100dp"
-        android:layout_height="100dp"
+        android:layout_width="160dp"
+        android:layout_height="160dp"
         android:layout_marginTop="30dp"
         android:background="@drawable/blankbg"
         android:scaleType="fitCenter"
@@ -130,7 +130,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_gravity="center"
-        android:layout_marginTop="160dp"
+        android:layout_marginTop="260dp"
         android:src="@drawable/heart"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
