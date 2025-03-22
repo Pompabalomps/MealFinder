@@ -16,7 +16,7 @@
         android:layout_marginStart="8dp"
         android:layout_marginTop="8dp"
         android:backgroundTint="@color/milk"
-        android:src="@drawable/backarrow"
+        android:src="@drawable/homebutton"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
@@ -49,7 +49,7 @@
             android:src="@drawable/heart" />
 
         <TextView
-            android:id="@+id/myImageViewText"
+            android:id="@+id/tvProfileLikes"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_alignLeft="@+id/myImageView"
@@ -59,7 +59,7 @@
             android:layout_margin="0dp"
             android:fontFamily="@font/kollektif_bolditalic"
             android:gravity="center"
-            android:text="10"
+            android:text="0"
             android:textColor="@color/black"
             android:textSize="25dp" />
     </RelativeLayout>

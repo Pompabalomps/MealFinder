@@ -15,7 +15,6 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.mealfinder.R;
-import com.example.mealfinder.adapters.ProfileRecipeAdapter;
 import com.example.mealfinder.adapters.RecipeAdapter;
 import com.example.mealfinder.objects.Recipe;
 import com.google.android.gms.tasks.OnCompleteListener;
@@ -46,6 +45,7 @@ public class Profile extends AppCompatActivity implements View.OnClickListener {
     private RecyclerView rvProfile;
     private View.OnClickListener onItemClickListener;
     private ArrayList<Recipe> recipes;
+    private TextView tvProfileLikes;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -58,6 +58,7 @@ public class Profile extends AppCompatActivity implements View.OnClickListener {
         profileBackBtn = findViewById(R.id.profileBackBtn);
         logoutProfileBtn = findViewById(R.id.logoutProfileBtn);
         rvProfile = findViewById(R.id.rvProfile);
+        tvProfileLikes = findViewById(R.id.tvProfileLikes);
         profileBackBtn.setOnClickListener(this);
         logoutProfileBtn.setOnClickListener(this);
 
@@ -83,15 +84,18 @@ public class Profile extends AppCompatActivity implements View.OnClickListener {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                 recipes = new ArrayList<>();
+                int likeCount = 0;
                 for (DataSnapshot recipeSnapshot : dataSnapshot.getChildren()) {
                     Recipe rec = recipeSnapshot.getValue(Recipe.class);
                     if (rec.getUserId().equals(mAuth.getCurrentUser().getUid())) {
                         recipes.add(rec);
+                        likeCount += rec.likes();
                     }
                 }
                 RecipeAdapter recipeAdapter = new RecipeAdapter(recipes);
                 rvProfile.setAdapter(recipeAdapter);
                 recipeAdapter.setmOnItemClickListener(onItemClickListener);
+                tvProfileLikes.setText("" + likeCount);
             }
 
             @Override

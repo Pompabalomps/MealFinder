@@ -27,6 +27,7 @@ import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 
 public class Search extends AppCompatActivity implements View.OnClickListener {
     private FirebaseAuth mAuth;
@@ -38,7 +39,7 @@ public class Search extends AppCompatActivity implements View.OnClickListener {
     private EditText etSearch;
     private ImageView ivRecents;
     private View.OnClickListener onItemClickListener;
-
+    private RecyclerView rvResults;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -51,13 +52,18 @@ public class Search extends AppCompatActivity implements View.OnClickListener {
         ibSearchBtn = findViewById(R.id.ibSearchBtn);
         etSearch = findViewById(R.id.etSearch);
         ivRecents = findViewById(R.id.ivRecents);
+        rvResults = findViewById(R.id.rvResults);
         searchBackBtn.setOnClickListener(this);
         ibSearchBtn.setOnClickListener(this);
 
         ivRecents.setVisibility(View.GONE);
+        rvResults.setVisibility(View.GONE);
 
         RecyclerView.LayoutManager layoutManager = new LinearLayoutManager(this);
         rvSearch.setLayoutManager(layoutManager);
+
+        RecyclerView.LayoutManager layoutManager2 = new LinearLayoutManager(this);
+        rvResults.setLayoutManager(layoutManager2);
 
         onItemClickListener = new View.OnClickListener() {
             @Override
@@ -69,7 +75,7 @@ public class Search extends AppCompatActivity implements View.OnClickListener {
             }
         };
 
-        db.getReference().child("recents").addValueEventListener(new ValueEventListener() {
+        db.getReference().child("recents").addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                 recents = new ArrayList<>();
@@ -91,9 +97,9 @@ public class Search extends AppCompatActivity implements View.OnClickListener {
 
             @Override
             public void onCancelled(@NonNull DatabaseError error) {
-
             }
         });
+
 
 //        recents = new ArrayList<SearchQuery>();
 //        recents.add(new SearchQuery("Smoked Brisket", mAuth.getCurrentUser().getUid()));
@@ -125,7 +131,30 @@ public class Search extends AppCompatActivity implements View.OnClickListener {
         if (v.getId() == R.id.ibSearchBtn) {
             SearchQuery query = new SearchQuery(etSearch.getText().toString(), mAuth.getCurrentUser().getUid());
             db.getReference().child("recents").child(query.getSearchId()).setValue(query);
-            etSearch.setText("");
+
+            db.getReference().child("recipes").addValueEventListener(new ValueEventListener() {
+                @Override
+                public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                    ArrayList<Recipe> recipes = new ArrayList<>();
+                    for (DataSnapshot recipeSnapshot : dataSnapshot.getChildren()) {
+                        Recipe r = recipeSnapshot.getValue(Recipe.class);
+                        if (r.getName().toLowerCase().contains(query.getQuery().toLowerCase()) || r.getDesc().toLowerCase().contains(query.getQuery().toLowerCase()) || Arrays.asList(r.getTags().stream().map(s->s.toLowerCase()).toArray()).contains(query.getQuery())) {
+                            recipes.add(r);
+                        }
+                    }
+                    RecipeAdapter recipeAdapter = new RecipeAdapter(recipes);
+                    rvResults.setAdapter(recipeAdapter);
+                    recipeAdapter.setmOnItemClickListener(onItemClickListener);
+                    rvSearch.setVisibility(View.GONE);
+                    ivRecents.setVisibility(View.GONE);
+                    rvResults.setVisibility(View.VISIBLE);
+                }
+
+                @Override
+                public void onCancelled(@NonNull DatabaseError error) {
+
+                }
+            });
         }
     }
 

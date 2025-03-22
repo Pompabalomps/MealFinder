@@ -30,7 +30,7 @@
         android:layout_marginStart="8dp"
         android:layout_marginTop="8dp"
         android:backgroundTint="@color/milk"
-        android:src="@drawable/backarrow"
+        android:src="@drawable/homebutton"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
@@ -82,6 +82,20 @@
         app:layout_constraintEnd_toStartOf="@+id/rvSearch"
         app:layout_constraintTop_toBottomOf="@+id/etSearch"
         app:srcCompat="@drawable/clock" />
+
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/rvResults"
+        android:layout_width="match_parent"
+        android:layout_height="500dp"
+        android:layout_below="@+id/etSearch"
+        android:layout_alignParentStart="true"
+        android:layout_alignParentEnd="true"
+        android:layout_marginStart="45dp"
+        android:layout_marginTop="10dp"
+        android:layout_marginEnd="45dp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/etSearch" />
 
 
 </androidx.constraintlayout.widget.ConstraintLayout>

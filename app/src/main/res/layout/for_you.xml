@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.appcompat.widget.LinearLayoutCompat xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/main"
@@ -14,78 +14,175 @@
         android:id="@+id/fyBackBtn"
         android:layout_width="60dp"
         android:layout_height="60dp"
-        android:src="@drawable/backarrow"
-        android:backgroundTint="@color/milk"
-        android:layout_marginTop="10dp"
-        android:layout_marginLeft="10dp"
-        android:layout_marginBottom="-60dp"
         android:layout_gravity="left"
-        />
+        android:layout_marginStart="8dp"
+        android:layout_marginTop="8dp"
+        android:backgroundTint="@color/milk"
+        android:src="@drawable/homebutton"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
 
     <TextView
         android:id="@+id/fyItemTitle"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Bread Sandwich"
-        android:textColor="@color/black"
-        android:fontFamily="@font/kollektif_bolditalic"
-        android:textSize="30sp"
         android:layout_gravity="center"
         android:layout_marginTop="80dp"
-        />
+        android:fontFamily="@font/kollektif_bolditalic"
+        android:text="Bread Sandwich"
+        android:textColor="@color/black"
+        android:textSize="30sp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="@id/fyBackBtn" />
+
+    <ImageView
+        android:id="@+id/ivFyRecImg1_1"
+        android:layout_width="100dp"
+        android:layout_height="100dp"
+        android:layout_marginTop="30dp"
+        android:background="@drawable/blankbg"
+        android:scaleType="fitCenter"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/fyItemTitle"
+        app:srcCompat="@drawable/plus" />
+
+    <ImageView
+        android:id="@+id/ivFyRecImg3_2"
+        android:layout_width="100dp"
+        android:layout_height="100dp"
+        android:layout_marginTop="30dp"
+        android:background="@drawable/blankbg"
+        android:scaleType="fitCenter"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/fyItemTitle"
+        app:srcCompat="@drawable/plus" />
+
+    <ImageView
+        android:id="@+id/ivFyRecImg3_3"
+        android:layout_width="100dp"
+        android:layout_height="100dp"
+        android:layout_marginTop="30dp"
+        android:background="@drawable/blankbg"
+        android:scaleType="fitCenter"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toEndOf="@+id/ivFyRecImg1_1"
+        app:layout_constraintTop_toBottomOf="@+id/fyItemTitle"
+        app:srcCompat="@drawable/plus" />
+
+    <ImageView
+        android:id="@+id/ivFyRecImg3_1"
+        android:layout_width="100dp"
+        android:layout_height="100dp"
+        android:layout_marginTop="30dp"
+        android:background="@drawable/blankbg"
+        android:scaleType="fitCenter"
+        app:layout_constraintEnd_toStartOf="@+id/ivFyRecImg1_1"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/fyItemTitle"
+        app:srcCompat="@drawable/plus" />
+
+    <ImageView
+        android:id="@+id/ivFyRecImg2_1"
+        android:layout_width="100dp"
+        android:layout_height="100dp"
+        android:layout_marginTop="30dp"
+        android:background="@drawable/blankbg"
+        android:scaleType="fitCenter"
+        app:layout_constraintEnd_toStartOf="@id/ivFyRecImg2_2"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/fyItemTitle"
+        app:srcCompat="@drawable/plus" />
+
+    <ImageView
+        android:id="@+id/ivFyRecImg2_2"
+        android:layout_width="100dp"
+        android:layout_height="100dp"
+        android:layout_marginTop="30dp"
+        android:background="@drawable/blankbg"
+        android:scaleType="fitCenter"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toEndOf="@+id/ivFyRecImg2_1"
+        app:layout_constraintTop_toBottomOf="@+id/fyItemTitle"
+        app:srcCompat="@drawable/plus" />
 
     <TextView
         android:id="@+id/fyRecLikes"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:fontFamily="@font/kollektif_bolditalic"
         android:text="0"
-        android:textSize="20dp"
         android:textAlignment="center"
         android:textColor="@color/black"
-        android:fontFamily="@font/kollektif_bolditalic"
-        android:layout_gravity="center"
-        android:layout_marginTop="100dp"
-        android:layout_marginBottom="-57dp"
+        android:textSize="20dp"
         android:translationZ="90dp"
-        />
+        app:layout_constraintBottom_toBottomOf="@+id/imageView"
+        app:layout_constraintEnd_toEndOf="@+id/imageView"
+        app:layout_constraintStart_toStartOf="@+id/imageView"
+        app:layout_constraintTop_toTopOf="@+id/imageView"
+        app:layout_constraintVertical_bias="0.41000003" />
 
     <ImageView
+        android:id="@+id/imageView"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:src="@drawable/heart"
-        android:layout_marginTop="0dp"
         android:layout_gravity="center"
-        />
+        android:layout_marginTop="160dp"
+        android:src="@drawable/heart"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/fyItemTitle" />
 
     <Button
         android:id="@+id/fyDetailBtn"
         android:layout_width="125dp"
         android:layout_height="40dp"
-        android:text="Show more!"
-        android:backgroundTint="@color/purple"
         android:layout_gravity="center"
-        />
+        android:layout_marginTop="10dp"
+        android:backgroundTint="@color/purple"
+        android:text="Show more!"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/imageView" />
 
     <LinearLayout
+        android:id="@+id/linearLayout"
         android:layout_width="250dp"
         android:layout_height="80dp"
-        android:background="@drawable/button_gradient"
         android:layout_gravity="center"
         android:layout_marginTop="20dp"
-        >
+        android:background="@drawable/button_gradient"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/fyDetailBtn">
+
         <Button
             android:id="@+id/fyAddToListBtn"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:singleLine="true"
-            android:text="Add recipe!"
-            android:textSize="30dp"
-            android:textAlignment="center"
-            android:textColor="@color/black"
-            android:fontFamily="@font/kollektif_bolditalic"
             android:layout_gravity="center"
             android:background="@android:color/transparent"
-            />
+            android:fontFamily="@font/kollektif_bolditalic"
+            android:singleLine="true"
+            android:text="Add recipe!"
+            android:textAlignment="center"
+            android:textColor="@color/black"
+            android:textSize="30dp" />
     </LinearLayout>
 
-</androidx.appcompat.widget.LinearLayoutCompat>
+    <ImageButton
+        android:id="@+id/moreFyBtn"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="10dp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        android:backgroundTint="@color/milk"
+        android:rotation="270"
+        app:srcCompat="@drawable/backarrow" />
+
+</androidx.constraintlayout.widget.ConstraintLayout>

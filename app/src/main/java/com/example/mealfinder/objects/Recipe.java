@@ -2,6 +2,7 @@ package com.example.mealfinder.objects;
 
 import java.io.Serializable;
 
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
@@ -16,9 +17,8 @@ public class Recipe implements Serializable {
     private String img1; // images
     private String img2;
     private String img3;
-    private int likes; // Amount of concurrent recipe likes
-    private double rating; // Recipe rating
     private List<String> tags; // Array of recipe tags
+    private List<String> userLikes;
 
 
     public Recipe(String name, String creatorName, String userId, String desc, String steps, String img1, String img2, String img3, List<String> tags){
@@ -32,9 +32,8 @@ public class Recipe implements Serializable {
         this.img1 = img1;
         this.img2 = img2;
         this.img3 = img3;
-        this.likes = 0;
-        this.rating = 0;
         this.tags = tags;
+        this.userLikes = new ArrayList<>();
     }
 
     public Recipe() {
@@ -48,9 +47,8 @@ public class Recipe implements Serializable {
         this.img1 = "";
         this.img2 = "";
         this.img3 = "";
-        this.likes = 0;
-        this.rating = 0;
         this.tags = null;
+        this.userLikes = new ArrayList<>();
     }
 
     public String getId() {
@@ -133,20 +131,8 @@ public class Recipe implements Serializable {
         this.img3 = img3;
     }
 
-    public int getLikes() {
-        return likes;
-    }
-
-    public void setLikes(int likes) {
-        this.likes = likes;
-    }
-
-    public double getRating() {
-        return rating;
-    }
-
-    public void setRating(double rating) {
-        this.rating = rating;
+    public int likes() {
+        return this.userLikes.size();
     }
 
     public List<String> getTags() {
@@ -155,5 +141,9 @@ public class Recipe implements Serializable {
 
     public void setTags(List<String> tags) {
         this.tags = tags;
+    }
+
+    public List<String> getUserLikes() {
+        return userLikes;
     }
 }

@@ -39,11 +39,23 @@ public class RecipeAdapter extends RecyclerView.Adapter<RecipeAdapter.RecipeView
         Recipe recipe = recipes.get(position);
         holder.tvRecipeName.setText(recipe.getName());
         holder.tvRecipeCreator.setText(recipe.getCreatorName());
-        holder.tvRecipeRating.setText(String.valueOf(recipe.getRating()));
+        holder.tvRecipeLikes.setText("" + recipe.likes());
 
-        Glide.with(holder.ivRecipe.getContext())
-                .load(recipe.getImg1())
-                .into(holder.ivRecipe);
+        if (recipe.getImg1().isEmpty()) {
+            if (recipe.getImg2().isEmpty()) {
+                Glide.with(holder.ivRecipe.getContext())
+                        .load(recipe.getImg3())
+                        .into(holder.ivRecipe);
+            } else {
+                Glide.with(holder.ivRecipe.getContext())
+                        .load(recipe.getImg2())
+                        .into(holder.ivRecipe);
+            }
+        } else {
+            Glide.with(holder.ivRecipe.getContext())
+                    .load(recipe.getImg1())
+                    .into(holder.ivRecipe);
+        }
     }
 
     @Override
@@ -54,14 +66,14 @@ public class RecipeAdapter extends RecyclerView.Adapter<RecipeAdapter.RecipeView
     public class RecipeViewHolder extends RecyclerView.ViewHolder {
         public TextView tvRecipeName;
         public TextView tvRecipeCreator;
-        public TextView tvRecipeRating;
+        public TextView tvRecipeLikes;
         public ImageView ivRecipe;
 
         public RecipeViewHolder(@NonNull View itemView) {
             super(itemView);
             tvRecipeName = itemView.findViewById(R.id.tvRecipeName);
             tvRecipeCreator = itemView.findViewById(R.id.tvRecipeCreator);
-            tvRecipeRating = itemView.findViewById(R.id.tvRecipeRating);
+            tvRecipeLikes = itemView.findViewById(R.id.tvRecipeLikes);
             ivRecipe = itemView.findViewById(R.id.ivRecipe);
 
             itemView.setTag(this);

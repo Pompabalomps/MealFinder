@@ -1,27 +1,36 @@
 package com.example.mealfinder.activities;
 
+import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 
+import android.app.AlertDialog;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
 import android.widget.ImageButton;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
 import com.example.mealfinder.R;
 import com.example.mealfinder.objects.Recipe;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
 
 import java.util.ArrayList;
+import java.util.List;
 
 public class RecipeDetails extends AppCompatActivity implements View.OnClickListener {
-    private Button followBtn;
     private Button addToList;
+    private Button RemoveRecipeBtn;
     private ImageButton recipeDetailsBackBtn;
     private TextView tvRecipeName;
     private TextView tvRecipeCreatorName;
@@ -33,16 +42,35 @@ public class RecipeDetails extends AppCompatActivity implements View.OnClickList
     private ImageView ivRecImg3_2;
     private ImageView ivRecImg3_3;
     private Bitmap bitmap;
-
+    private FirebaseAuth mAuth;
+    private FirebaseDatabase db;
+    private String recId;
+    private String recDesc;
+    private String recSteps;
+    private LinearLayout LLAddRecipe;
+    private LinearLayout LLRemoveRecipe;
+    private ArrayList<String> savedRecipes;
+    private TextView tvRecipeDesc;
+    private Button ReadMoreBtn;
+    private TextView tvRecipeSteps;
+    private Button ReadMoreBtn2;
+    private List<String> recUserLikes;
+    private ImageButton likeBtn;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.recipe_details);
+        db = FirebaseDatabase.getInstance();
         Intent i = getIntent();
         Recipe rec = (Recipe) i.getSerializableExtra("rec");
-        followBtn = findViewById(R.id.followBtn);
+        recId = rec.getId();
+        recDesc = rec.getDesc();
+        recSteps = rec.getSteps();
+        recUserLikes = rec.getUserLikes();
+        mAuth = FirebaseAuth.getInstance();
         addToList = findViewById(R.id.addToListBtn);
+        RemoveRecipeBtn = findViewById(R.id.RemoveRecipeBtn);
         recipeDetailsBackBtn = findViewById(R.id.recipeDetailsBackBtn);
         tvRecipeName = findViewById(R.id.tvRecipeDetailsName);
         tvRecipeCreatorName = findViewById(R.id.tvRecipeCreatorName);
@@ -53,14 +81,28 @@ public class RecipeDetails extends AppCompatActivity implements View.OnClickList
         ivRecImg3_1 = findViewById(R.id.ivRecImg3_1);
         ivRecImg3_2 = findViewById(R.id.ivRecImg3_2);
         ivRecImg3_3 = findViewById(R.id.ivRecImg3_3);
-        followBtn.setOnClickListener(this);
+        LLAddRecipe = findViewById(R.id.LLAddRecipe);
+        LLRemoveRecipe = findViewById(R.id.LLRemoveRecipe);
+        tvRecipeDesc = findViewById(R.id.tvRecipeDesc);
+        tvRecipeSteps = findViewById(R.id.tvRecipeSteps);
+        ReadMoreBtn = findViewById(R.id.readMoreBtn);
+        ReadMoreBtn2 = findViewById(R.id.readMoreBtn2);
+        likeBtn = findViewById(R.id.likeBtn);
         addToList.setOnClickListener(this);
+        RemoveRecipeBtn.setOnClickListener(this);
         recipeDetailsBackBtn.setOnClickListener(this);
+        ReadMoreBtn.setOnClickListener(this);
+        ReadMoreBtn2.setOnClickListener(this);
+        likeBtn.setOnClickListener(this);
+
+        LLRemoveRecipe.setVisibility(View.GONE);
 
         tvRecipeName.setText(rec.getName());
         tvRecipeCreatorName.setText(rec.getCreatorName());
-        tvRecipeLikeCounter.setText("" + rec.getLikes());
-        ArrayList<String> images = new ArrayList<String>();
+        tvRecipeLikeCounter.setText("" + rec.likes());
+        tvRecipeDesc.setText(rec.getDesc());
+        tvRecipeSteps.setText(rec.getSteps());
+        ArrayList<String> images = new ArrayList<>();
         if (!rec.getImg1().isEmpty())
             images.add(rec.getImg1());
         if (!rec.getImg2().isEmpty())
@@ -119,44 +161,80 @@ public class RecipeDetails extends AppCompatActivity implements View.OnClickList
                 ivRecImg3_2.setVisibility(View.GONE);
                 ivRecImg3_3.setVisibility(View.GONE);
         }
+
+        db.getReference().child("users").child(mAuth.getCurrentUser().getUid()).child("savedRecipes").addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                savedRecipes = new ArrayList<>();
+                for (DataSnapshot recipeSnapshot : dataSnapshot.getChildren()) {
+                    String savedRec = recipeSnapshot.getValue(String.class);
+                    savedRecipes.add(savedRec);
+                }
+
+                if (savedRecipes.contains(recId)) {
+                    LLAddRecipe.setVisibility(View.GONE);
+                    LLRemoveRecipe.setVisibility(View.VISIBLE);
+                }
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError error) {
+
+            }
+        });
     }
 
     @Override
     public void onClick(View v) {
-        if (v.getId() == R.id.followBtn) {
-            Intent i = new Intent(this, Profile.class);
+        if (v.getId() == R.id.addToListBtn) {
+            Intent i = new Intent(this, RecipeList.class);
+            db.getReference().child("users").child(mAuth.getCurrentUser().getUid()).child("savedRecipes").child(recId).setValue(recId);
             startActivity(i);
         }
-        if (v.getId() == R.id.addToListBtn) {
-            Intent i = new Intent(this, EditRecipe.class);
+        if (v.getId() == R.id.RemoveRecipeBtn) {
+            Intent i = new Intent(this, RecipeList.class);
+            db.getReference().child("users").child(mAuth.getCurrentUser().getUid()).child("savedRecipes").child(recId).removeValue();
             startActivity(i);
         }
         if (v.getId() == R.id.recipeDetailsBackBtn) {
             Intent i = new Intent(this, Main.class);
             startActivity(i);
         }
-    }
-
-    private void setPic(ImageView takePhotoIv, String photoPath) {
-        int targetW = takePhotoIv.getWidth();
-        int targetH = takePhotoIv.getHeight();
-
-        BitmapFactory.Options bmOptions = new BitmapFactory.Options();
-        bmOptions.inJustDecodeBounds = true;
-
-        BitmapFactory.decodeFile(photoPath, bmOptions);
-
-        int photoW = bmOptions.outWidth;
-        int photoH = bmOptions.outHeight;
-
-        int scaleFactor = Math.max(1, Math.min(photoW/targetW, photoH/targetH));
-
-        bmOptions.inJustDecodeBounds = false;
-        bmOptions.inSampleSize = scaleFactor;
-
-        bitmap = BitmapFactory.decodeFile(photoPath, bmOptions);
-//        takePhotoIv.setRotation(90);
-        takePhotoIv.setImageBitmap(bitmap);
+        if (v.getId() == R.id.readMoreBtn) {
+            AlertDialog alertDialog = new AlertDialog.Builder(this)
+                    .setTitle("Recipe Description")
+                    .setMessage(recDesc)
+                    .setNegativeButton("Close", new DialogInterface.OnClickListener() {
+                        public void onClick(DialogInterface dialog, int which) {
+                            dialog.dismiss();
+                        }
+                    })
+                    .create();
+            alertDialog.show();
+        }
+        if (v.getId() == R.id.readMoreBtn2) {
+            AlertDialog alertDialog = new AlertDialog.Builder(this)
+                    .setTitle("Recipe Instructions")
+                    .setMessage(recSteps)
+                    .setNegativeButton("Close", new DialogInterface.OnClickListener() {
+                        public void onClick(DialogInterface dialog, int which) {
+                            dialog.dismiss();
+                        }
+                    })
+                    .create();
+            alertDialog.show();
+        }
+        if (v.getId() == R.id.likeBtn) {
+            if (recUserLikes.contains(mAuth.getCurrentUser().getUid())) {
+                recUserLikes.remove(mAuth.getCurrentUser().getUid());
+                db.getReference().child("recipes").child(recId).child("userLikes").setValue(recUserLikes);
+                tvRecipeLikeCounter.setText("" + recUserLikes.size());
+            } else {
+                recUserLikes.add(mAuth.getCurrentUser().getUid());
+                db.getReference().child("recipes").child(recId).child("userLikes").setValue(recUserLikes);
+                tvRecipeLikeCounter.setText("" + recUserLikes.size());
+            }
+        }
     }
 
     @Override

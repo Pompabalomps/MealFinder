@@ -10,7 +10,7 @@ public class SearchQuery {
     public SearchQuery(String query, String userId) {
         this.query = query;
         this.searchDate = new Date();
-        this.searchId = userId + this.searchDate.getTime() + this.query.hashCode();
+        this.searchId = userId + String.valueOf(this.searchDate.getTime()) + String.valueOf(this.query.hashCode());
     }
     public SearchQuery() {
         this.query = "";
@@ -35,7 +35,7 @@ public class SearchQuery {
     }
 
     public String getSearchId() {
-        return searchId;
+        return this.searchId;
     }
 
     public void setSearchId(String searchId) {

@@ -44,6 +44,7 @@ import java.util.Calendar;
 import java.util.Map;
 import java.util.Random;
 import java.util.concurrent.TimeUnit;
+import java.util.concurrent.atomic.AtomicBoolean;
 
 public class Main extends AppCompatActivity implements View.OnClickListener {
 
@@ -58,6 +59,7 @@ public class Main extends AppCompatActivity implements View.OnClickListener {
     private ArrayList<Recipe> recipes;
     private View.OnClickListener onItemClickListener;
     private Calendar calendar;
+    private ImageButton addRecipeBtn;
 
 
     @Override
@@ -70,11 +72,13 @@ public class Main extends AppCompatActivity implements View.OnClickListener {
         ibMainProfile = findViewById(R.id.ibMainProfile);
         mainFyBtn = findViewById(R.id.mainFyBtn);
         moreMainBtn = findViewById(R.id.moreMainBtn);
+        addRecipeBtn = findViewById(R.id.addRecipeBtn);
         calendar = Calendar.getInstance();
         ibMainSearch.setOnClickListener(this);
         ibMainProfile.setOnClickListener(this);
         mainFyBtn.setOnClickListener(this);
         moreMainBtn.setOnClickListener(this);
+        addRecipeBtn.setOnClickListener(this);
 
 //        recipes = new ArrayList<>();
 //        recipes.add(new Recipe("Hamburger", "Alon", "1234", "Meat patty between two breads", "cook the meat patty then add between breads", null, null, null, Arrays.asList(new String[]{"burger", "meat", "tasty"})));
@@ -104,9 +108,16 @@ public class Main extends AppCompatActivity implements View.OnClickListener {
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                 recipes = new ArrayList<>();
                 for (DataSnapshot recipeSnapshot : dataSnapshot.getChildren()) {
-                    recipes.add(recipeSnapshot.getValue(Recipe.class));
+                    Recipe r = recipeSnapshot.getValue(Recipe.class);
+                    recipes.add(r);
                 }
-                RecipeAdapter recipeAdapter = new RecipeAdapter(recipes);
+                RecipeAdapter recipeAdapter;
+                if (recipes.size()>=3) {
+                    ArrayList<Recipe> subRecipes = new ArrayList<>(recipes.subList(0, 3));
+                    recipeAdapter = new RecipeAdapter(subRecipes);
+                } else {
+                    recipeAdapter = new RecipeAdapter(recipes);
+                }
                 rvMain.setAdapter(recipeAdapter);
                 recipeAdapter.setmOnItemClickListener(onItemClickListener);
             }
@@ -172,50 +183,65 @@ public class Main extends AppCompatActivity implements View.OnClickListener {
         }
 
         if (v.getId() == R.id.mainFyBtn) {
-            db.getReference().child("users").child(mAuth.getCurrentUser().getUid()).child("savedRecipes").addValueEventListener(new ValueEventListener() {
-                @Override
-                public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                    ArrayList<String> savedRecipes = new ArrayList<>();
-                    for (DataSnapshot recipeSnapshot : dataSnapshot.getChildren()) {
-                        savedRecipes.add(recipeSnapshot.getValue(String.class));
-                    }
-                    db.getReference().child("recipes").addValueEventListener(new ValueEventListener() {
+            AtomicBoolean screenOpened = new AtomicBoolean(false); // Track screen opening
+
+            db.getReference().child("users").child(mAuth.getCurrentUser().getUid()).child("savedRecipes")
+                    .addListenerForSingleValueEvent(new ValueEventListener() {
                         @Override
                         public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                            recipes = new ArrayList<>();
+                            ArrayList<String> savedRecipes = new ArrayList<>();
                             for (DataSnapshot recipeSnapshot : dataSnapshot.getChildren()) {
-                                Recipe rec = recipeSnapshot.getValue(Recipe.class);
-                                if (!rec.getUserId().equals(mAuth.getCurrentUser().getUid()) && !savedRecipes.contains(rec.getId())) {
-                                    recipes.add(rec);
+                                savedRecipes.add(recipeSnapshot.getValue(String.class));
+                            }
+
+                            db.getReference().child("recipes").addValueEventListener(new ValueEventListener() {
+                                @Override
+                                public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                                    if (screenOpened.get()) return; // Prevent multiple openings
+
+                                    recipes = new ArrayList<>();
+                                    for (DataSnapshot recipeSnapshot : dataSnapshot.getChildren()) {
+                                        Recipe rec = recipeSnapshot.getValue(Recipe.class);
+                                        if (!rec.getUserId().equals(mAuth.getCurrentUser().getUid()) &&
+                                                !savedRecipes.contains(rec.getId())) {
+                                            recipes.add(rec);
+                                        }
+                                    }
+
+                                    if (recipes.isEmpty()) {
+                                        // Show Toast only if screen has NOT been opened before
+                                        if (!screenOpened.get()) {
+                                            Toast.makeText(Main.this, "No new recipes to show!", Toast.LENGTH_SHORT).show();
+                                        }
+                                    } else if (screenOpened.compareAndSet(false, true)) {
+                                        // Open ForYou activity only once
+                                        Intent i = new Intent(Main.this, ForYou.class);
+                                        i.putExtra("rec", getRandom(recipes));
+                                        startActivity(i);
+                                    }
                                 }
-                            }
-                            if (recipes.isEmpty()) {
-                                Toast.makeText(Main.this, "No new recipes to show!", Toast.LENGTH_SHORT).show();
-                            } else {
-                                Intent i = new Intent(Main.this, ForYou.class);
-                                i.putExtra("rec", getRandom(recipes));
-                                startActivity(i);
-                            }
+
+                                @Override
+                                public void onCancelled(@NonNull DatabaseError error) {
+                                }
+                            });
                         }
 
                         @Override
                         public void onCancelled(@NonNull DatabaseError error) {
-
                         }
                     });
-                }
-
-                @Override
-                public void onCancelled(@NonNull DatabaseError error) {
-
-                }
-            });
 
 
         }
 
         if (v.getId() == R.id.moreMainBtn) {
             Intent i = new Intent(this, RecipeList.class);
+            startActivity(i);
+        }
+
+        if (v.getId() == R.id.addRecipeBtn) {
+            Intent i = new Intent(this, EditRecipe.class);
             startActivity(i);
         }
     }
