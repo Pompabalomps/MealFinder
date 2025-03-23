@@ -1,0 +1,17 @@
+@startuml
+
+class User {
+    -String id;
+    -String username;
+    -String email;
+    -Date lastLogin;
+
+    +getId() String
+    +getUsername() String
+    +getEmail() String
+    +getLastLogin() Date
+    +User()
+    +User(String id, String username, String email)
+}
+
+@enduml

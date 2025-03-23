@@ -44,14 +44,11 @@ import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.IOException;
 import java.text.SimpleDateFormat;
-import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Date;
-import java.util.List;
 import java.util.Map;
 
 public class EditRecipe extends AppCompatActivity implements View.OnClickListener {
-    private static final String TAG = "Edit Recipe Activity";
     private ImageButton editRBackBtn;
     private Button saveRecipeBtn;
     private EditText etRecipeName;
@@ -66,8 +63,6 @@ public class EditRecipe extends AppCompatActivity implements View.OnClickListene
     private FirebaseStorage stor;
     private UploadTask uploadTask;
     private static Uri downloadUri;
-    private final String[] u = new String[1];
-    private String username;
     private static final int REQUEST_TAKE_PHOTO = 1;
     private String currentPhotoPath;
     private static Uri img1downloadUrl;
@@ -76,18 +71,16 @@ public class EditRecipe extends AppCompatActivity implements View.OnClickListene
     private Bitmap bitmap;
     private static int currentIB;
     private Recipe rec;
-    private boolean isExists;
     private LinearLayout LLsaveRecipe;
     private Drawable enabledBG;
     private Drawable disabledBG;
+    private final String[] u = new String[1];
+    private String username;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.edit_recipe);
-        Intent i = getIntent();
-        rec = (Recipe)i.getSerializableExtra("rec");
-        isExists = i.getBooleanExtra("isExists", false);
         mAuth = FirebaseAuth.getInstance();
         db = FirebaseDatabase.getInstance();
         stor = FirebaseStorage.getInstance();
@@ -115,29 +108,6 @@ public class EditRecipe extends AppCompatActivity implements View.OnClickListene
         img1downloadUrl = Uri.EMPTY;
         img2downloadUrl = Uri.EMPTY;
         img3downloadUrl = Uri.EMPTY;
-
-        if (rec != null) {
-            etRecipeName.setText(rec.getName());
-            etRecipeInstr.setText(rec.getSteps());
-            etRecipeDesc.setText(rec.getDesc());
-            etRecipeTags.setText(String.join(",", rec.getTags()));
-//            img1currentPhotoPath = rec.getImg1();
-//            img2currentPhotoPath = rec.getImg2();
-//            img3currentPhotoPath = rec.getImg3();
-
-//            if (!img1currentPhotoPath.equals("null")) {
-//                currentPhotoPath = img1currentPhotoPath;
-//                setPic(addImageIb1);
-//            }
-//            if (!img2currentPhotoPath.equals("null")) {
-//                currentPhotoPath = img2currentPhotoPath;
-//                setPic(addImageIb2);
-//            }
-//            if (!img3currentPhotoPath.equals("null")) {
-//                currentPhotoPath = img3currentPhotoPath;
-//                setPic(addImageIb3);
-//            }
-        }
 
         readUsername(s -> {
             u[0] = s;
@@ -170,17 +140,15 @@ public class EditRecipe extends AppCompatActivity implements View.OnClickListene
         if (v.getId() == R.id.saveRecipeBtn) {
             FirebaseUser currentUser = mAuth.getCurrentUser();
             String[] tags = etRecipeTags.getText().toString().split(",");
-            if (isExists) {
-                rec.setName(etRecipeName.getText().toString());
-                rec.setDesc(etRecipeDesc.getText().toString());
-                rec.setSteps(etRecipeInstr.getText().toString());
-                rec.setTags(Arrays.asList(tags));
-                rec.setImg1(!img1downloadUrl.equals(Uri.EMPTY) ? img1downloadUrl.toString() : rec.getImg1());
-                rec.setImg2(!img2downloadUrl.equals(Uri.EMPTY) ? img2downloadUrl.toString() : rec.getImg2());
-                rec.setImg3(!img3downloadUrl.equals(Uri.EMPTY) ? img3downloadUrl.toString() : rec.getImg3());
-            } else {
-                rec = new Recipe(etRecipeName.getText().toString(), username, currentUser.getUid().toString(), etRecipeDesc.getText().toString(), etRecipeInstr.getText().toString(), !img1downloadUrl.equals(Uri.EMPTY) ? img1downloadUrl.toString() : "", !img2downloadUrl.equals(Uri.EMPTY) ? img2downloadUrl.toString() : "", !img3downloadUrl.equals(Uri.EMPTY) ? img3downloadUrl.toString() : "", Arrays.asList(tags));
-            }
+            rec = new Recipe(etRecipeName.getText().toString(),
+                    username,
+                    currentUser.getUid().toString(),
+                    etRecipeDesc.getText().toString(),
+                    etRecipeInstr.getText().toString(),
+                    !img1downloadUrl.equals(Uri.EMPTY) ? img1downloadUrl.toString() : "",
+                    !img2downloadUrl.equals(Uri.EMPTY) ? img2downloadUrl.toString() : "",
+                    !img3downloadUrl.equals(Uri.EMPTY) ? img3downloadUrl.toString() : "",
+                    Arrays.asList(tags));
             db.getReference().child("recipes").child(rec.getId()).setValue(rec);
             Intent i = new Intent(this, RecipeDetails.class);
             i.putExtra("rec", rec);
@@ -199,25 +167,6 @@ public class EditRecipe extends AppCompatActivity implements View.OnClickListene
             currentIB = 3;
             dispatchTakePictureIntent();
         }
-    }
-
-    private void readUsername(MyCallback myCallback) {
-        FirebaseUser currentUser = mAuth.getCurrentUser();
-        db.getReference().child("users").child(currentUser.getUid()).get().addOnCompleteListener(new OnCompleteListener<DataSnapshot>() {
-            @Override
-            public void onComplete(@NonNull Task<DataSnapshot> task) {
-                if (!task.isSuccessful()) {
-                    Log.e("firebase", "Error getting data", task.getException());
-                }
-                else {
-                    myCallback.onCallback(((Map<String, Object>)task.getResult().getValue()).get("username").toString());
-                }
-            }
-        });
-    }
-
-    private interface MyCallback {
-        void onCallback(String s);
     }
 
     @SuppressLint("MissingSuperCall")
@@ -243,6 +192,26 @@ public class EditRecipe extends AppCompatActivity implements View.OnClickListene
                 default:
             }
         }
+    }
+
+    private void readUsername(MyCallback myCallback) {
+        FirebaseUser currentUser = mAuth.getCurrentUser();
+        db.getReference().child("users")
+                .child(currentUser.getUid()).get().addOnCompleteListener(new OnCompleteListener<DataSnapshot>() {
+            @Override
+            public void onComplete(@NonNull Task<DataSnapshot> task) {
+                if (!task.isSuccessful()) {
+                    Log.e("firebase", "Error getting data", task.getException());
+                }
+                else {
+                    myCallback.onCallback(((Map<String, Object>)task.getResult().getValue()).get("username").toString());
+                }
+            }
+        });
+    }
+
+    private interface MyCallback {
+        void onCallback(String s);
     }
 
     private void setPic(ImageButton takePhotoIb) {

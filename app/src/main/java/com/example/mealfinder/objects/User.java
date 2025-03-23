@@ -12,9 +12,7 @@ public class User {
     private String id;
     private String username;
     private String email;
-    private int followNum;
     private Date lastLogin;
-    private ArrayList<Recipe> recentRecipes;
 
 
 
@@ -30,30 +28,19 @@ public class User {
         return email;
     }
 
-    public int getFollowNum() {
-        return followNum;
-    }
-
     public Date getLastLogin() {
         return lastLogin;
     }
-
-    public ArrayList<Recipe> getRecentRecipes() { return this.recentRecipes; }
-
     public User() {
         this.id = null;
         this.username = null;
         this.email = null;
-        this.followNum = 0;
         this.lastLogin = new Date(0);
-        this.recentRecipes = new ArrayList<Recipe>(3);
     }
-    public User(String id, String username, String email, int followNum, Date lastLogin) {
+    public User(String id, String username, String email) {
         this.id = id;
         this.username = username;
         this.email = email;
-        this.followNum = followNum;
-        this.lastLogin = lastLogin;
-        this.recentRecipes = new ArrayList<Recipe>(3);
+        this.lastLogin = new Date();
     }
 }

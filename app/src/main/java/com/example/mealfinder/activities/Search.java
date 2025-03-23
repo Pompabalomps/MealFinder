@@ -132,7 +132,7 @@ public class Search extends AppCompatActivity implements View.OnClickListener {
             startActivity(i);
         }
         if (v.getId() == R.id.ibSearchBtn) {
-            SearchQuery query = new SearchQuery(etSearch.getText().toString(), mAuth.getCurrentUser().getUid());
+            SearchQuery query = new SearchQuery(etSearch.getText().toString());
             db.getReference().child("recents").child(query.getSearchId()).setValue(query);
 
             db.getReference().child("recipes").addValueEventListener(new ValueEventListener() {
@@ -141,7 +141,9 @@ public class Search extends AppCompatActivity implements View.OnClickListener {
                     ArrayList<Recipe> recipes = new ArrayList<>();
                     for (DataSnapshot recipeSnapshot : dataSnapshot.getChildren()) {
                         Recipe r = recipeSnapshot.getValue(Recipe.class);
-                        if (r.getName().toLowerCase().contains(query.getQuery().toLowerCase()) || r.getDesc().toLowerCase().contains(query.getQuery().toLowerCase()) || Arrays.asList(r.getTags().stream().map(s->s.toLowerCase()).toArray()).contains(query.getQuery())) {
+                        if (r.getName().toLowerCase().contains(query.getQuery().toLowerCase()) ||
+                                r.getDesc().toLowerCase().contains(query.getQuery().toLowerCase()) ||
+                                Arrays.asList(r.getTags().stream().map(s->s.toLowerCase()).toArray()).contains(query.getQuery())) {
                             recipes.add(r);
                         }
                     }

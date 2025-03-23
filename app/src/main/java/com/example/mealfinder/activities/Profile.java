@@ -121,7 +121,10 @@ public class Profile extends AppCompatActivity implements View.OnClickListener {
 
     private void reload(FirebaseUser user) {
         final String[] username = new String[1];
-        db.getReference().child("users").child(user.getUid()).get().addOnCompleteListener(new OnCompleteListener<DataSnapshot>() {
+        db.getReference()
+                .child("users")
+                .child(user.getUid())
+                .get().addOnCompleteListener(new OnCompleteListener<DataSnapshot>() {
             @Override
             public void onComplete(@NonNull Task<DataSnapshot> task) {
                 if (!task.isSuccessful()) {

@@ -158,7 +158,10 @@ public class ForYou extends AppCompatActivity implements View.OnClickListener {
 
         if (v.getId() == R.id.fyAddToListBtn) {
             Intent i = new Intent(this, RecipeList.class);
-            db.getReference().child("users").child(mAuth.getCurrentUser().getUid()).child("savedRecipes").child(recipe.getId()).setValue(recipe.getId());
+            db.getReference().child("users").child(mAuth.getCurrentUser().getUid())
+                    .child("savedRecipes")
+                    .child(recipe.getId())
+                    .setValue(recipe.getId());
             startActivity(i);
         }
 
@@ -191,7 +194,9 @@ public class ForYou extends AppCompatActivity implements View.OnClickListener {
                                     if (recipes.isEmpty()) {
                                         // Show Toast only if screen has NOT been opened before
                                         if (!screenOpened.get()) {
-                                            Toast.makeText(ForYou.this, "No new recipes to show!", Toast.LENGTH_SHORT).show();
+                                            Toast.makeText(ForYou.this,
+                                            "No new recipes to show!",
+                                                Toast.LENGTH_SHORT).show();
                                         }
                                     } else if (screenOpened.compareAndSet(false, true)) {
                                         // Open ForYou activity only once

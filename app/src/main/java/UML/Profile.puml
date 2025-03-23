@@ -1,0 +1,45 @@
+@startuml
+
+class Profile {
+        -FirebaseAuth mAuth
+        -String TAG
+        -TextView tvProfileHello
+        -ImageButton profileBackBtn
+        -Button logoutProfileBtn
+        -FirebaseDatabase db
+        -FirebaseStorage stor
+        -RecyclerView rvProfile
+        -View.OnClickListener onItemClickListener
+        -ArrayList<Recipe> recipes
+        -TextView tvProfileLikes
+        
+        +onCreate(Bundle savedInstanceState) void
+        +onStart() void
+        +onClick(View v) void
+        -reload(FirebaseUser user) void
+        +onPause() void
+        +onResume() void
+    }
+    
+    class AppCompatActivity {
+        <<Abstract>>
+    }
+    
+    class View.OnClickListener {
+        <<Interface>>
+    }
+
+    class Recipe {
+        <<Referenced>>
+    }
+    
+    Profile --|> AppCompatActivity : extends
+    Profile ..|> View.OnClickListener : implements
+    
+    Profile --> FirebaseDatabase : uses
+    Profile --> FirebaseAuth : uses
+    Profile --> RecyclerView : uses
+    Profile --> RecipeAdapter : uses
+    Profile --> Recipe : uses
+
+@enduml

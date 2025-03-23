@@ -18,6 +18,8 @@ import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.FirebaseDatabase;
 
+import java.util.Date;
+
 public class Login extends AppCompatActivity implements View.OnClickListener {
 
     private final String TAG = "Login Activity";
@@ -79,6 +81,10 @@ public class Login extends AppCompatActivity implements View.OnClickListener {
         if (user != null) {
             Log.d(TAG, "Sign In SUCCESS");
             Intent i = new Intent(this, Main.class);
+            db.getReference().child("users")
+                    .child(user.getUid())
+                    .child("lastLogin")
+                    .setValue(new Date());
             startActivity(i);
         } else {
             Log.d(TAG, "Sign In FAILURE");

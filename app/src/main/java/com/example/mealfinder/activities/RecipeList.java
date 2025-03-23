@@ -74,7 +74,10 @@ public class RecipeList extends AppCompatActivity implements View.OnClickListene
 
 
 
-        db.getReference().child("users").child(mAuth.getCurrentUser().getUid()).child("savedRecipes").addValueEventListener(new ValueEventListener() {
+        db.getReference()
+                .child("users")
+                .child(mAuth.getCurrentUser().getUid())
+                .child("savedRecipes").addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                 savedRecipes = new ArrayList<>();
@@ -129,7 +132,9 @@ public class RecipeList extends AppCompatActivity implements View.OnClickListene
         FirebaseUser currentUser = mAuth.getCurrentUser();
 
         final String[] username = new String[1];
-        db.getReference().child("users").child(currentUser.getUid()).get().addOnCompleteListener(new OnCompleteListener<DataSnapshot>() {
+        db.getReference()
+                .child("users")
+                .child(currentUser.getUid()).get().addOnCompleteListener(new OnCompleteListener<DataSnapshot>() {
             @Override
             public void onComplete(@NonNull Task<DataSnapshot> task) {
                 if (!task.isSuccessful()) {

@@ -1,0 +1,50 @@
+@startuml
+
+        class Search {
+            -FirebaseAuth mAuth
+            -ImageButton searchBackBtn
+            -RecyclerView rvSearch
+            -FirebaseDatabase db
+            -ArrayList<SearchQuery> recents
+            -ImageButton ibSearchBtn
+            -EditText etSearch
+            -ImageView ivRecents
+            -View.OnClickListener onItemClickListener
+            -RecyclerView rvResults
+
+            +onCreate(Bundle savedInstanceState) void
+            +onStart() void
+            -reload() void
+            +onClick(View v) void
+            +onPause() void
+            +onResume() void
+        }
+
+        class AppCompatActivity {
+            <<abstract>>
+        }
+
+        class View.OnClickListener {
+            <<interface>>
+            +onClick(View v) void
+        }
+
+        class Recipe {
+            <<Referenced>>
+        }
+
+        class SearchQuery {
+            <<Referenced>>
+        }
+
+        Search --> Recipe : uses
+        Search --> SearchQuery : creates
+        Search --|> AppCompatActivity : extends
+        Search ..|> View.OnClickListener : implements
+        Search --> FirebaseAuth : uses
+        Search --> FirebaseDatabase : uses
+        Search --> RecyclerView : uses
+        Search --> RecipeAdapter : uses
+        Search --> RecentsAdapter : uses
+
+@enduml

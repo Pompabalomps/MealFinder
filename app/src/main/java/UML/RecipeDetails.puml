@@ -1,0 +1,59 @@
+@startuml
+
+    class RecipeDetails {
+        -Button addToList
+        -Button RemoveRecipeBtn
+        -ImageButton recipeDetailsBackBtn
+        -TextView tvRecipeName
+        -TextView tvRecipeCreatorName
+        -TextView tvRecipeLikeCounter
+        -ImageView ivRecImg1_1
+        -ImageView ivRecImg2_1
+        -ImageView ivRecImg2_2
+        -ImageView ivRecImg3_1
+        -ImageView ivRecImg3_2
+        -ImageView ivRecImg3_3
+        -Bitmap bitmap
+        -FirebaseAuth mAuth
+        -FirebaseDatabase db
+        -String recId
+        -String recDesc
+        -String recSteps
+        -LinearLayout LLAddRecipe
+        -LinearLayout LLRemoveRecipe
+        -ArrayList<String> savedRecipes
+        -TextView tvRecipeDesc
+        -Button ReadMoreBtn
+        -TextView tvRecipeSteps
+        -Button ReadMoreBtn2
+        -List<String> recUserLikes
+        -ImageButton likeBtn
+
+        +onCreate(Bundle savedInstanceState) void
+        +onClick(View v) void
+        +onPause() void
+        +onResume() void
+    }
+
+    class AppCompatActivity {
+        <<Abstract>>
+    }
+
+    class View.OnClickListener {
+        <<Interface>>
+    }
+
+    class Recipe {
+        <<Referenced>>
+    }
+
+    RecipeDetails --|> AppCompatActivity : extends
+    RecipeDetails ..|> View.OnClickListener : implements
+
+    RecipeDetails --> FirebaseDatabase : uses
+    RecipeDetails --> FirebaseAuth : uses
+    RecipeDetails --> FirebaseStorage : uses
+    RecipeDetails --> Recipe : uses
+    RecipeDetails --> Glide : uses
+
+@enduml

@@ -1,0 +1,69 @@
+@startuml
+
+    class EditRecipe {
+        -ImageButton editRBackBtn;
+        -Button saveRecipeBtn;
+        -EditText etRecipeName;
+        -EditText etRecipeDesc;
+        -EditText etRecipeInstr;
+        -EditText etRecipeTags;
+        -ImageButton addImageIb1;
+        -ImageButton addImageIb2;
+        -ImageButton addImageIb3;
+        -FirebaseAuth mAuth;
+        -FirebaseDatabase db;
+        -FirebaseStorage stor;
+        -UploadTask uploadTask;
+        -static Uri downloadUri;
+        -static final int REQUEST_TAKE_PHOTO = 1;
+        -String currentPhotoPath;
+        -static Uri img1downloadUrl;
+        -static Uri img2downloadUrl;
+        -static Uri img3downloadUrl;
+        -Bitmap bitmap;
+        -static int currentIB;
+        -Recipe rec;
+        -LinearLayout LLsaveRecipe;
+        -Drawable enabledBG;
+        -Drawable disabledBG;
+        
+        +onCreate(Bundle savedInstanceState) void
+        +onStart() void
+        +onClick(View v) void
+        #onActivityResult(int requestCode, int resultCode, Intent data) void
+        -readUsername(MyCallback myCallback) void
+        -setPic(ImageButton takePhotoIb) void
+        -dispatchTakePictureIntent() void
+        -createImageFile() File
+        -uploadCompressedImage() void
+        -uploadFullImage() void
+        +onPause() void
+        +onResume() void
+    }
+    
+    class AppCompatActivity {
+        <<Abstract>>
+    }
+    
+    class View.OnClickListener {
+        <<Interface>>
+    }
+
+    interface MyCallback {
+        +onCallback(String s) void
+    }
+    
+    EditRecipe --|> AppCompatActivity : extends
+    EditRecipe ..|> View.OnClickListener : implements
+    
+    class Recipe {
+        <<Referenced>>
+    }
+    
+    EditRecipe --> Recipe : uses
+    EditRecipe --> FirebaseDatabase : uses
+    EditRecipe --> FirebaseAuth : uses
+    EditRecipe --> FirebaseStorage : uses
+    EditRecipe +-- MyCallback
+
+@enduml

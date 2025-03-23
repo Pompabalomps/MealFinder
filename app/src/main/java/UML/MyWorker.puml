@@ -1,0 +1,17 @@
+@startuml
+
+class MyWorker {
+    -String CHANNEL_ID
+    -Context mContext
+    -Long WEEK
+
+    +MyWorker(@NonNull Context context, @NonNull WorkerParameters params)
+    +doWork() Result
+    +createNotificationChannel() void
+}
+
+MyWorker --|> Worker : extends
+MyWorker --> NotificationManagerCompat : uses
+MyWorker --> NotificationCompat : uses
+
+@enduml

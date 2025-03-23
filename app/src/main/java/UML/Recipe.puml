@@ -1,0 +1,46 @@
+@startuml
+
+class Recipe {
+    -String id
+    -Date createDate
+    -String name
+    -String creatorName
+    -String userId
+    -String desc
+    -String steps
+    -String img1
+    -String img2
+    -String img3
+    -List<String> tags
+    -List<String> userLikes
+
+    +Recipe(String name, String creatorName, String userId, String desc, String steps, String img1, String img2, String img3, List<String> tags)
+    +Recipe()
+    +getId() String
+    +setId(String id) void
+    +getCreateDate() Date
+    +getName() String
+    +setName(String name) void
+    +getCreatorName() String
+    +setCreatorName(String creatorName) void
+    +getUserId() String
+    +setUserId(String userId) void
+    +getDesc() String
+    +setDesc(String desc) void
+    +getSteps() String
+    +setSteps(String steps) void
+    +getImg1() String
+    +setImg1(String img1) void
+    +getImg2() String
+    +setImg2(String img2) void
+    +getImg3() String
+    +setImg3(String img3) void
+    +likes() int
+    +getTags() List<String>
+    +setTags(List<String> tags) void
+    +getUserLikes() List<String>
+}
+
+Recipe ..|> Serializable : implements
+
+@enduml

@@ -1,0 +1,27 @@
+@startuml
+
+class RecentsAdapter {
+    -ArrayList<SearchQuery> recents
+    -View.OnClickListener mOnItemClickListener
+
+    +RecentsAdapter()
+    +setmOnItemClickListener(View.OnClickListener itemClickListener) void
+    +onCreateViewHolder(@NonNull ViewGroup parent, int viewType) RecentViewHolder
+    +onBindViewHolder(@NonNull RecentViewHolder holder, int position) void
+    -getItemCount() int
+}
+
+class RecentViewHolder {
+    -TextView tvRecentName
+
+    +RecentViewHolder(@NonNull View itemView)
+}
+
+
+RecentViewHolder --|> RecyclerView.ViewHolder : extends
+RecentsAdapter --|> RecyclerView.Adapter : extends
+RecentViewHolder +-- RecentsAdapter : nested
+RecentsAdapter --> SearchQuery : uses
+
+
+@enduml

@@ -31,7 +31,8 @@ public class RecentsAdapter extends RecyclerView.Adapter<RecentsAdapter.RecentVi
     @NonNull
     @Override
     public RecentViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-        View recentView = LayoutInflater.from(parent.getContext()).inflate(R.layout.recycler_recent_search_item, parent, false);
+        View recentView = LayoutInflater.from(parent.getContext())
+                .inflate(R.layout.recycler_recent_search_item, parent, false);
         return new RecentViewHolder(recentView);
     }
 

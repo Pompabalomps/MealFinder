@@ -2,17 +2,9 @@ package com.example.mealfinder.activities;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.core.content.FileProvider;
 
-import android.annotation.SuppressLint;
 import android.content.Intent;
-import android.content.SharedPreferences;
-import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
-import android.net.Uri;
 import android.os.Bundle;
-import android.os.Environment;
-import android.provider.MediaStore;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
@@ -30,12 +22,6 @@ import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.storage.FirebaseStorage;
 
-
-import java.io.File;
-import java.io.IOException;
-import java.text.SimpleDateFormat;
-import java.util.Date;
-
 public class Signup extends AppCompatActivity implements View.OnClickListener {
     Button signupBtn;
     ImageButton backBtn;
@@ -47,11 +33,6 @@ public class Signup extends AppCompatActivity implements View.OnClickListener {
     EditText etSignupPassword2;
     private final String TAG = "Signup Activity";
     private FirebaseDatabase db;
-    private FirebaseStorage stor;
-    private static final int REQUEST_TAKE_PHOTO = 1;
-    private String currentPhotoPath;
-    private Bitmap bitmap;
-//    private ImageView ivPhoto;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -59,7 +40,6 @@ public class Signup extends AppCompatActivity implements View.OnClickListener {
         setContentView(R.layout.signup);
         mAuth = FirebaseAuth.getInstance();
         db = FirebaseDatabase.getInstance();
-        stor = FirebaseStorage.getInstance();
         signupBtn = findViewById(R.id.signupBtn);
         backBtn = findViewById(R.id.signupBackBtn);
         tvFail = findViewById(R.id.tvSignupFail);
@@ -67,7 +47,6 @@ public class Signup extends AppCompatActivity implements View.OnClickListener {
         etSignupUsername = findViewById(R.id.etSignupUsername);
         etSignupPassword = findViewById(R.id.etSignupPassword);
         etSignupPassword2 = findViewById(R.id.etSignupPassword2);
-//        ivPhoto = findViewById(R.id.ivPhoto);
         signupBtn.setOnClickListener(this);
         backBtn.setOnClickListener(this);
     }
@@ -88,10 +67,9 @@ public class Signup extends AppCompatActivity implements View.OnClickListener {
                 createAccount(email, password);
             }
         } else if (v.getId() == R.id.signupBackBtn) {
-            finish();
+            Intent i = new Intent(this, Login.class);
+            startActivity(i);
         }
-
-
     }
 
     // [START on_start_check_user]
@@ -130,8 +108,10 @@ public class Signup extends AppCompatActivity implements View.OnClickListener {
         if (user != null) {
             Log.d(TAG, "Sign Up SUCCESS");
             String username = etSignupUsername.getText().toString();
-            User u = new User(user.getUid(), username, user.getEmail(), 0, new Date());
-            db.getReference().child("users").child(user.getUid()).setValue(u).addOnCompleteListener(task -> {
+            User u = new User(user.getUid(), username, user.getEmail());
+            db.getReference()
+                    .child("users")
+                    .child(user.getUid()).setValue(u).addOnCompleteListener(task -> {
                 if (task.isSuccessful()) {
                     Log.d(TAG, "User data successfully added to database");
                 } else {

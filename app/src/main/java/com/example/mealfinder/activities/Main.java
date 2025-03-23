@@ -60,6 +60,7 @@ public class Main extends AppCompatActivity implements View.OnClickListener {
     private View.OnClickListener onItemClickListener;
     private Calendar calendar;
     private ImageButton addRecipeBtn;
+    private ArrayList<String> savedRecipes;
 
 
     @Override
@@ -103,23 +104,42 @@ public class Main extends AppCompatActivity implements View.OnClickListener {
 
 
 
-        db.getReference().child("recipes").addValueEventListener(new ValueEventListener() {
+        db.getReference().child("users")
+                .child(mAuth.getCurrentUser().getUid())
+                .child("savedRecipes").addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                recipes = new ArrayList<>();
+                savedRecipes = new ArrayList<>();
                 for (DataSnapshot recipeSnapshot : dataSnapshot.getChildren()) {
-                    Recipe r = recipeSnapshot.getValue(Recipe.class);
-                    recipes.add(r);
+                    String savedRec = recipeSnapshot.getValue(String.class);
+                    savedRecipes.add(savedRec);
                 }
-                RecipeAdapter recipeAdapter;
-                if (recipes.size()>=3) {
-                    ArrayList<Recipe> subRecipes = new ArrayList<>(recipes.subList(0, 3));
-                    recipeAdapter = new RecipeAdapter(subRecipes);
-                } else {
-                    recipeAdapter = new RecipeAdapter(recipes);
-                }
-                rvMain.setAdapter(recipeAdapter);
-                recipeAdapter.setmOnItemClickListener(onItemClickListener);
+                db.getReference().child("recipes").addValueEventListener(new ValueEventListener() {
+                    @Override
+                    public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                        recipes = new ArrayList<>();
+                        for (DataSnapshot recipeSnapshot : dataSnapshot.getChildren()) {
+                            Recipe rec = recipeSnapshot.getValue(Recipe.class);
+                            if (savedRecipes.contains(rec.getId())) {
+                                recipes.add(rec);
+                            }
+                        }
+                        RecipeAdapter recipeAdapter;
+                        if (recipes.size()>=3) {
+                            ArrayList<Recipe> subRecipes = new ArrayList<>(recipes.subList(0, 3));
+                            recipeAdapter = new RecipeAdapter(subRecipes);
+                        } else {
+                            recipeAdapter = new RecipeAdapter(recipes);
+                        }
+                        rvMain.setAdapter(recipeAdapter);
+                        recipeAdapter.setmOnItemClickListener(onItemClickListener);
+                    }
+
+                    @Override
+                    public void onCancelled(@NonNull DatabaseError error) {
+
+                    }
+                });
             }
 
             @Override
@@ -132,7 +152,9 @@ public class Main extends AppCompatActivity implements View.OnClickListener {
         FirebaseUser currentUser = mAuth.getCurrentUser();
 
         final String[] username = new String[1];
-        db.getReference().child("users").child(currentUser.getUid()).get().addOnCompleteListener(new OnCompleteListener<DataSnapshot>() {
+        db.getReference()
+                .child("users")
+                .child(currentUser.getUid()).get().addOnCompleteListener(new OnCompleteListener<DataSnapshot>() {
             @Override
             public void onComplete(@NonNull Task<DataSnapshot> task) {
                 if (!task.isSuccessful()) {
@@ -185,7 +207,10 @@ public class Main extends AppCompatActivity implements View.OnClickListener {
         if (v.getId() == R.id.mainFyBtn) {
             AtomicBoolean screenOpened = new AtomicBoolean(false); // Track screen opening
 
-            db.getReference().child("users").child(mAuth.getCurrentUser().getUid()).child("savedRecipes")
+            db.getReference()
+                    .child("users")
+                    .child(mAuth.getCurrentUser().getUid())
+                    .child("savedRecipes")
                     .addListenerForSingleValueEvent(new ValueEventListener() {
                         @Override
                         public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
@@ -211,7 +236,9 @@ public class Main extends AppCompatActivity implements View.OnClickListener {
                                     if (recipes.isEmpty()) {
                                         // Show Toast only if screen has NOT been opened before
                                         if (!screenOpened.get()) {
-                                            Toast.makeText(Main.this, "No new recipes to show!", Toast.LENGTH_SHORT).show();
+                                            Toast.makeText(Main.this,
+                                                    "No new recipes to show!",
+                                                    Toast.LENGTH_SHORT).show();
                                         }
                                     } else if (screenOpened.compareAndSet(false, true)) {
                                         // Open ForYou activity only once

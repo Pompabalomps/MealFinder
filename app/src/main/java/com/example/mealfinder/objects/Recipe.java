@@ -63,10 +63,6 @@ public class Recipe implements Serializable {
         return createDate;
     }
 
-    public void setCreateDate(Date createDate) {
-        this.createDate = createDate;
-    }
-
     public String getName() {
         return name;
     }

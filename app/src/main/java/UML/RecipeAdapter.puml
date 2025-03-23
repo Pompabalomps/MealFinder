@@ -1,0 +1,30 @@
+@startuml
+
+class RecipeAdapter {
+    -ArrayList<Recipe> recipes
+    -View.OnClickListener mOnItemClickListener
+
+    +RecipeAdapter()
+    +setmOnItemClickListener(View.OnClickListener itemClickListener) void
+    +onCreateViewHolder(@NonNull ViewGroup parent, int viewType) RecipeViewHolder
+    +onBindViewHolder(@NonNull RecipeViewHolder holder, int position) void
+    -getItemCount() int
+}
+
+class RecipeViewHolder {
+    -TextView tvRecipeName;
+    -TextView tvRecipeCreator;
+    -TextView tvRecipeLikes;
+    -ImageView ivRecipe;
+
+    +RecipeViewHolder(@NonNull View itemView)
+}
+
+
+RecipeViewHolder --|> RecyclerView.ViewHolder : extends
+RecipeAdapter --|> RecyclerView.Adapter : extends
+RecipeViewHolder +-- RecipeAdapter : nested
+RecipeAdapter --> Recipe : uses
+RecipeAdapter --> Glide : uses
+
+@enduml

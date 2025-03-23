@@ -41,7 +41,6 @@ public class RecipeDetails extends AppCompatActivity implements View.OnClickList
     private ImageView ivRecImg3_1;
     private ImageView ivRecImg3_2;
     private ImageView ivRecImg3_3;
-    private Bitmap bitmap;
     private FirebaseAuth mAuth;
     private FirebaseDatabase db;
     private String recId;
@@ -162,7 +161,10 @@ public class RecipeDetails extends AppCompatActivity implements View.OnClickList
                 ivRecImg3_3.setVisibility(View.GONE);
         }
 
-        db.getReference().child("users").child(mAuth.getCurrentUser().getUid()).child("savedRecipes").addValueEventListener(new ValueEventListener() {
+        db.getReference()
+                .child("users")
+                .child(mAuth.getCurrentUser().getUid())
+                .child("savedRecipes").addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                 savedRecipes = new ArrayList<>();
@@ -188,12 +190,20 @@ public class RecipeDetails extends AppCompatActivity implements View.OnClickList
     public void onClick(View v) {
         if (v.getId() == R.id.addToListBtn) {
             Intent i = new Intent(this, RecipeList.class);
-            db.getReference().child("users").child(mAuth.getCurrentUser().getUid()).child("savedRecipes").child(recId).setValue(recId);
+            db.getReference()
+                    .child("users")
+                    .child(mAuth.getCurrentUser().getUid())
+                    .child("savedRecipes")
+                    .child(recId).setValue(recId);
             startActivity(i);
         }
         if (v.getId() == R.id.RemoveRecipeBtn) {
             Intent i = new Intent(this, RecipeList.class);
-            db.getReference().child("users").child(mAuth.getCurrentUser().getUid()).child("savedRecipes").child(recId).removeValue();
+            db.getReference()
+                    .child("users")
+                    .child(mAuth.getCurrentUser().getUid())
+                    .child("savedRecipes")
+                    .child(recId).removeValue();
             startActivity(i);
         }
         if (v.getId() == R.id.recipeDetailsBackBtn) {
@@ -227,11 +237,17 @@ public class RecipeDetails extends AppCompatActivity implements View.OnClickList
         if (v.getId() == R.id.likeBtn) {
             if (recUserLikes.contains(mAuth.getCurrentUser().getUid())) {
                 recUserLikes.remove(mAuth.getCurrentUser().getUid());
-                db.getReference().child("recipes").child(recId).child("userLikes").setValue(recUserLikes);
+                db.getReference()
+                        .child("recipes")
+                        .child(recId)
+                        .child("userLikes").setValue(recUserLikes);
                 tvRecipeLikeCounter.setText("" + recUserLikes.size());
             } else {
                 recUserLikes.add(mAuth.getCurrentUser().getUid());
-                db.getReference().child("recipes").child(recId).child("userLikes").setValue(recUserLikes);
+                db.getReference()
+                        .child("recipes")
+                        .child(recId)
+                        .child("userLikes").setValue(recUserLikes);
                 tvRecipeLikeCounter.setText("" + recUserLikes.size());
             }
         }

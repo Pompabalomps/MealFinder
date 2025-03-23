@@ -1,0 +1,42 @@
+@startuml
+
+class RecipeList {
+        -FirebaseAuth mAuth
+        -String TAG
+        -TextView tvListTitle
+        -ImageButton listBackBtn
+        -FirebaseDatabase db
+        -RecyclerView rvRecipeList
+        -View.OnClickListener onItemClickListener
+        -ArrayList<Recipe> recipes
+        -ArrayList<String> savedRecipes
+
+        +onCreate(Bundle savedInstanceState) void
+        +onClick(View v) void
+        -reload(FirebaseUser user) void
+        +onPause() void
+        +onResume() void
+    }
+
+    class AppCompatActivity {
+        <<Abstract>>
+    }
+
+    class View.OnClickListener {
+        <<Interface>>
+    }
+
+    class Recipe {
+        <<Referenced>>
+    }
+
+    RecipeList --|> AppCompatActivity : extends
+    RecipeList ..|> View.OnClickListener : implements
+
+    RecipeList --> FirebaseDatabase : uses
+    RecipeList --> FirebaseAuth : uses
+    RecipeList --> Recipe : uses
+    RecipeList --> RecyclerView : uses
+    RecipeList --> RecipeAdapter : uses
+
+@enduml

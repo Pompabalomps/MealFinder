@@ -1,0 +1,18 @@
+@startuml
+
+class SearchQuery {
+    -String query
+    -Date searchDate
+    -String searchId
+
+    +SearchQuery(String query, String userId)
+    +SearchQuery()
+    +getQuery() String
+    +setQuery(String query) void
+    +getSearchDate() Date
+    +setSearchDate(Date searchDate) void
+    +getSearchId() String
+    +setSearchId(String searchId) void
+}
+
+@enduml
