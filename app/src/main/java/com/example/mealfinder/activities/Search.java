@@ -132,7 +132,7 @@ public class Search extends AppCompatActivity implements View.OnClickListener {
             startActivity(i);
         }
         if (v.getId() == R.id.ibSearchBtn) {
-            SearchQuery query = new SearchQuery(etSearch.getText().toString());
+            SearchQuery query = new SearchQuery(etSearch.getText().toString(), mAuth.getUid());
             db.getReference().child("recents").child(query.getSearchId()).setValue(query);
 
             db.getReference().child("recipes").addValueEventListener(new ValueEventListener() {

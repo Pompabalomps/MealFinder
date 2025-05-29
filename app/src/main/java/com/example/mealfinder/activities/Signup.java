@@ -4,6 +4,7 @@ import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
@@ -129,5 +130,31 @@ public class Signup extends AppCompatActivity implements View.OnClickListener {
     private void reload() {
         Intent i = new Intent(this, Main.class);
         startActivity(i);
+    }
+
+    @Override
+    protected void onPause() {
+        super.onPause();
+
+        // Storing data in SharedPreferences
+        SharedPreferences sharedPreferences = getSharedPreferences("UserPreferences", MODE_PRIVATE);
+        SharedPreferences.Editor editor = sharedPreferences.edit();
+
+        editor.putLong("lastLogout", System.currentTimeMillis());
+        editor.putBoolean("isAppOn", false);
+
+        editor.apply();
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+
+        SharedPreferences sharedPreferences = getSharedPreferences("UserPreferences", MODE_PRIVATE);
+        SharedPreferences.Editor editor = sharedPreferences.edit();
+
+        editor.putBoolean("isAppOn", true);
+
+        editor.apply();
     }
 }

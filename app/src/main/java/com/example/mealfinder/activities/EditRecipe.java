@@ -177,17 +177,17 @@ public class EditRecipe extends AppCompatActivity implements View.OnClickListene
                 case 1:
                     setPic(addImageIb1);
                     uploadFullImage();
-                    uploadCompressedImage();
+//                    uploadCompressedImage();
                     break;
                 case 2:
                     setPic(addImageIb2);
                     uploadFullImage();
-                    uploadCompressedImage();
+//                    uploadCompressedImage();
                     break;
                 case 3:
                     setPic(addImageIb3);
                     uploadFullImage();
-                    uploadCompressedImage();
+//                    uploadCompressedImage();
                     break;
                 default:
             }
@@ -276,54 +276,54 @@ public class EditRecipe extends AppCompatActivity implements View.OnClickListene
         return image;
     }
 
-    private void uploadCompressedImage() {
-        StorageMetadata metadata = new StorageMetadata.Builder()
-                .setContentType("image/jpeg")
-                .build();
-        ByteArrayOutputStream baos = new ByteArrayOutputStream();
-        Matrix matrix = new Matrix();
-        matrix.postRotate(0);
-        Bitmap scaledBitmap = Bitmap.createScaledBitmap(bitmap, bitmap.getWidth(), bitmap.getHeight(), true);
-        Bitmap rotatedBitmap = Bitmap.createBitmap(scaledBitmap, 0, 0, scaledBitmap.getWidth(), scaledBitmap.getHeight(), matrix, true);
-        rotatedBitmap.compress(Bitmap.CompressFormat.JPEG, 100, baos);
-        byte[] data = baos.toByteArray();
-
-        Uri file = Uri.fromFile(new File(currentPhotoPath));
-        final StorageReference reverseRef = stor.getReference().child("compressed_images").child(file.getLastPathSegment());
-        UploadTask uploadTask = reverseRef.putBytes(data, metadata);
-        Task<Uri> uriTask = uploadTask.continueWithTask(new Continuation<UploadTask.TaskSnapshot, Task<Uri>>() {
-            @Override
-            public Task<Uri> then(@NonNull Task<UploadTask.TaskSnapshot> task) throws Exception {
-                if (!task.isSuccessful()) {
-                    throw task.getException();
-                }
-
-                return reverseRef.getDownloadUrl();
-            }
-        }).addOnCompleteListener(new OnCompleteListener<Uri>() {
-            @Override
-            public void onComplete(@NonNull Task<Uri> task) {
-                if (task.isSuccessful()) {
-                    downloadUri = task.getResult();
-                    switch (currentIB) {
-                        case 1:
-                            img1downloadUrl = downloadUri;
-                            break;
-                        case 2:
-                            img2downloadUrl = downloadUri;
-                            break;
-                        case 3:
-                            img3downloadUrl = downloadUri;
-                            break;
-                        default:
-                    }
-                    saveRecipeBtn.setEnabled(true);
-                    LLsaveRecipe.setBackground(enabledBG);
-                    saveRecipeBtn.setAlpha(1f);
-                }
-            }
-        });
-    }
+//    private void uploadCompressedImage() {
+//        StorageMetadata metadata = new StorageMetadata.Builder()
+//                .setContentType("image/jpeg")
+//                .build();
+//        ByteArrayOutputStream baos = new ByteArrayOutputStream();
+//        Matrix matrix = new Matrix();
+//        matrix.postRotate(0);
+//        Bitmap scaledBitmap = Bitmap.createScaledBitmap(bitmap, bitmap.getWidth(), bitmap.getHeight(), true);
+//        Bitmap rotatedBitmap = Bitmap.createBitmap(scaledBitmap, 0, 0, scaledBitmap.getWidth(), scaledBitmap.getHeight(), matrix, true);
+//        rotatedBitmap.compress(Bitmap.CompressFormat.JPEG, 100, baos);
+//        byte[] data = baos.toByteArray();
+//
+//        Uri file = Uri.fromFile(new File(currentPhotoPath));
+//        final StorageReference reverseRef = stor.getReference().child("compressed_images").child(file.getLastPathSegment());
+//        UploadTask uploadTask = reverseRef.putBytes(data, metadata);
+//        Task<Uri> uriTask = uploadTask.continueWithTask(new Continuation<UploadTask.TaskSnapshot, Task<Uri>>() {
+//            @Override
+//            public Task<Uri> then(@NonNull Task<UploadTask.TaskSnapshot> task) throws Exception {
+//                if (!task.isSuccessful()) {
+//                    throw task.getException();
+//                }
+//
+//                return reverseRef.getDownloadUrl();
+//            }
+//        }).addOnCompleteListener(new OnCompleteListener<Uri>() {
+//            @Override
+//            public void onComplete(@NonNull Task<Uri> task) {
+//                if (task.isSuccessful()) {
+//                    downloadUri = task.getResult();
+//                    switch (currentIB) {
+//                        case 1:
+//                            img1downloadUrl = downloadUri;
+//                            break;
+//                        case 2:
+//                            img2downloadUrl = downloadUri;
+//                            break;
+//                        case 3:
+//                            img3downloadUrl = downloadUri;
+//                            break;
+//                        default:
+//                    }
+//                    saveRecipeBtn.setEnabled(true);
+//                    LLsaveRecipe.setBackground(enabledBG);
+//                    saveRecipeBtn.setAlpha(1f);
+//                }
+//            }
+//        });
+//    }
 
     private void uploadFullImage() {
         StorageMetadata metadata = new StorageMetadata.Builder()

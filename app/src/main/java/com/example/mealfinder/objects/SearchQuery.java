@@ -6,11 +6,12 @@ public class SearchQuery {
     private String query;
     private Date searchDate;
     private String searchId;
+    private String userId;
 
-    public SearchQuery(String query) {
+    public SearchQuery(String query, String userId) {
         this.query = query;
         this.searchDate = new Date();
-        this.searchId = String.valueOf(this.searchDate.getTime()) + String.valueOf(this.query.hashCode());
+        this.searchId = userId + String.valueOf(this.searchDate.getTime()) + String.valueOf(this.query.hashCode());
     }
     public SearchQuery() {
         this.query = "";

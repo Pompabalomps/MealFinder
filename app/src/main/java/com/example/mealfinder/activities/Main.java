@@ -11,17 +11,13 @@ import androidx.work.OneTimeWorkRequest;
 import androidx.work.PeriodicWorkRequest;
 import androidx.work.WorkManager;
 
-import android.Manifest;
 import android.content.Intent;
 import android.content.SharedPreferences;
-import android.content.pm.PackageManager;
-import android.os.Build;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.ImageButton;
-import android.widget.TextView;
 import android.widget.Toast;
 
 import com.example.mealfinder.R;
@@ -165,7 +161,7 @@ public class Main extends AppCompatActivity implements View.OnClickListener {
                     Log.d(TAG, "username = " + username[0]);
                     PeriodicWorkRequest myWorkRequest =
                             new PeriodicWorkRequest.Builder(MyWorker.class, 1, TimeUnit.DAYS)
-                                    .setInitialDelay(15000, TimeUnit.MILLISECONDS)
+                                    .setInitialDelay(10000, TimeUnit.MILLISECONDS)
                                     .addTag("mywork")
                                     .setInputData(new Data.Builder().putString("username",username[0]).build())
                                     // Constraints

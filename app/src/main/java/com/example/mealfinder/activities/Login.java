@@ -110,4 +110,30 @@ public class Login extends AppCompatActivity implements View.OnClickListener {
     private void reload(FirebaseUser user) {
         mAuth.signOut();
     }
+
+    @Override
+    protected void onPause() {
+        super.onPause();
+
+        // Storing data in SharedPreferences
+        SharedPreferences sharedPreferences = getSharedPreferences("UserPreferences", MODE_PRIVATE);
+        SharedPreferences.Editor editor = sharedPreferences.edit();
+
+        editor.putLong("lastLogout", System.currentTimeMillis());
+        editor.putBoolean("isAppOn", false);
+
+        editor.apply();
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+
+        SharedPreferences sharedPreferences = getSharedPreferences("UserPreferences", MODE_PRIVATE);
+        SharedPreferences.Editor editor = sharedPreferences.edit();
+
+        editor.putBoolean("isAppOn", true);
+
+        editor.apply();
+    }
 }
